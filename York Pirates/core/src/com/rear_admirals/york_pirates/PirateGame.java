@@ -7,18 +7,29 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
-public class PirateGame extends ApplicationAdapter {
+public class PirateGame extends ApplicationAdapter implements InputProcessor {
 	SpriteBatch batch;
 	Texture img;
+	TiledMap tiledMap;
+	TiledMapRenderer tiledMapRenderer;
+
 	int x = 0;
 	int y = 0;
 
 	@Override
 	public void create () {
+		float w = Gdx.graphics.getWidth();
+		float h = Gdx.graphics.getHeight();
+
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		img = new Texture("GrassIsland.png");
 		Gdx.graphics.setTitle("York Pirates!");
+		map.create();
 	}
 
 	@Override
@@ -34,6 +45,7 @@ public class PirateGame extends ApplicationAdapter {
 		batch.begin();
 		batch.draw(img, x, y);
 		batch.end();
+		map.render();
 	}
 
 	@Override
