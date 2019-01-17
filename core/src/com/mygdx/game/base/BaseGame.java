@@ -2,14 +2,13 @@ package com.mygdx.game.base;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.mygdx.game.Player;
 
 public abstract class BaseGame extends Game {
     // used to store resources common to multiple screens
-    Skin skin;
+    public Skin skin;
 
-    public BaseGame() {
-        skin = new Skin();
-    }
+    public BaseGame() { skin = new Skin(); }
 
     public abstract void create();
 

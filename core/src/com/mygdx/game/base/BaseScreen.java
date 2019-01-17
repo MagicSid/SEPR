@@ -13,8 +13,8 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
     protected Stage uiStage;
 
-    public final int viewWidth = 800;
-    public final int viewHeight = 600;
+    public final int viewWidth = 1920;
+    public final int viewHeight = 1080;
 
     private boolean paused;
 
