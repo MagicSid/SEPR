@@ -357,11 +357,13 @@ public class CombatScreen extends BaseScreen {
                 break;
             case PLAYER_FLEES:
                 textBox.setStyle(game.skin.get("red", TextButton.TextButtonStyle.class));
+                combatHandler(BattleEvent.SCENE_RETURN);
                 break;
             case SCENE_RETURN:
                 System.out.println("END OF COMBAT");
                 toggleAttackStage();
                 textBox.setText("STOP");
+                game.setScreen(sailingScreen);
                 break;
         }
     }

@@ -15,8 +15,8 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.mygdx.game.DerwentBoss;
 import com.mygdx.game.Enemy;
 import com.mygdx.game.Player;
 import com.mygdx.game.base.BaseActor;
@@ -27,16 +27,20 @@ import com.mygdx.game.screens.departmentscreen.ChemistryScreen;
 import com.mygdx.game.screens.departmentscreen.PhysicsScreen;
 
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class SailingScreen extends BaseScreen {
 
     private Player player;
     private Enemy enemy;
 
+    private DerwentBoss derwentBoss;
+
     Label instructions;
 
     private ArrayList<BaseActor> obstacleList;
     private ArrayList<BaseActor> removeList;
+    private ArrayList<BaseActor> regionList;
 
     private int tileSize = 64;
     private int tileCountWidth = 80;
@@ -63,8 +67,12 @@ public class SailingScreen extends BaseScreen {
         enemy = new Enemy();
         mainStage.addActor(enemy);
 
+        derwentBoss = new DerwentBoss();
+        mainStage.addActor(derwentBoss);
+
         obstacleList = new ArrayList<BaseActor>();
         removeList = new ArrayList<BaseActor>();
+        regionList = new ArrayList<BaseActor>();
 
         // set up tile map, renderer and camera
         tiledMap = new TmxMapLoader().load("game_map.tmx");
@@ -88,6 +96,8 @@ public class SailingScreen extends BaseScreen {
                 case "enemy":
                     enemy.setPosition(r.x, r.y);
                     break;
+                case "derwentboss":
+                    derwentBoss.setPosition(r.x, r.y);
                 default:
                     System.err.println("Unknown tilemap object: " + name);
             }
@@ -110,22 +120,22 @@ public class SailingScreen extends BaseScreen {
             }
         }
 
-        BitmapFont font = new BitmapFont();
-        String text = " Press S to start, M for main menu ";
-        Label.LabelStyle style = new Label.LabelStyle(font, Color.YELLOW);
-        this.instructions = new Label(text, style);
-        instructions.setFontScale(5);
-        instructions.setPosition(100, 50);
-        // Repeating color pulse effect
-        instructions.addAction(Actions.forever(
-                Actions.sequence(
-                        Actions.color(new Color(1,1,0,1 ),0.5f),
-                        Actions.delay(0.5f),
-                        Actions.color(new Color(0.5f,0.5f,0,1),0.5f)
-                )
-        ));
-        instructions.setVisible(false);
-        uiStage.addActor(instructions);
+        objects = tiledMap.getLayers().get("RegionData").getObjects();
+        for (MapObject object : objects) {
+            if (object instanceof RectangleMapObject) {
+                RectangleMapObject rectangleObject = (RectangleMapObject) object;
+                Rectangle r = rectangleObject.getRectangle();
+
+                BaseActor region = new BaseActor();
+                region.setPosition(r.x, r.y);
+                region.setSize(r.width, r.height);
+                region.setRectangleBoundary();
+                region.setName(object.getName());
+                regionList.add(region);
+            } else {
+                System.err.println("Unknown RegionData object.");
+            }
+        }
     }
 
     @Override
@@ -144,6 +154,7 @@ public class SailingScreen extends BaseScreen {
                         if (Gdx.input.isKeyPressed(Input.Keys.S)) game.setScreen(new PhysicsScreen(game, this));
                         break;
                     case "derwent":
+                        if (Gdx.input.isKeyPressed(Input.Keys.F)) game.setScreen(new CombatScreen(game, this.player, this.derwentBoss.bossShip, this));
                         break;
                     case "vanbrugh":
                         break;
@@ -151,6 +162,19 @@ public class SailingScreen extends BaseScreen {
                         break;
                     default:
                         System.out.println("Pure obstacle");
+                }
+            }
+        }
+
+        for (BaseActor region : regionList) {
+            if (player.overlaps(region, false)) {
+                switch (region.getName()) {
+                    case "derwentregion":
+                        int enemyChance = ThreadLocalRandom.current().nextInt(0, 10001);
+                        System.out.println(enemyChance);
+                        if (enemyChance <= 20) {
+                            game.setScreen(new CombatScreen(game, this.player, new Enemy().enemyShip,this));
+                        }
                 }
             }
         }
@@ -199,10 +223,5 @@ public class SailingScreen extends BaseScreen {
         mainStage.draw();
         tiledMapRenderer.render(foregroundLayers);
         uiStage.draw();
-    }
-
-    public boolean keyDown(int keycode) {
-
-        return false;
     }
 }
