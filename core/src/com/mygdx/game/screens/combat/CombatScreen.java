@@ -1,10 +1,9 @@
-package com.mygdx.game.combat;
+package com.mygdx.game.screens.combat;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
@@ -12,10 +11,10 @@ import com.mygdx.game.Player;
 import com.mygdx.game.Ship;
 import com.mygdx.game.base.BaseGame;
 import com.mygdx.game.base.BaseScreen;
-import com.mygdx.game.combat.attacks.Attack;
-import com.mygdx.game.combat.attacks.Flee;
-import com.mygdx.game.combat.attacks.GrapeShot;
-import com.mygdx.game.sailing.SailingScreen;
+import com.mygdx.game.screens.combat.attacks.Attack;
+import com.mygdx.game.screens.combat.attacks.Flee;
+import com.mygdx.game.screens.combat.attacks.GrapeShot;
+import com.mygdx.game.screens.SailingScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +45,8 @@ public class CombatScreen extends BaseScreen {
     public Player player;
     public Ship enemy;
 
-    public Player temp_player;
-    public Ship temp_enemy;
+    // Sailing scene to go back
+    SailingScreen sailingScreen;
 
     // Control the layout of the stage
     private Table completeAttackTable;
@@ -71,10 +70,11 @@ public class CombatScreen extends BaseScreen {
     private int animationIndex = 0;
     private String displayText = "";
 
-    public CombatScreen(BaseGame g, Player player, Ship enemy) {
+    public CombatScreen(BaseGame g, Player player, Ship enemy, SailingScreen sailingScreen) {
         super(g);
         this.player = player;
         this.enemy = enemy;
+        this.sailingScreen = sailingScreen;
 
         //Load the skin for this Screen
         game.skin = new Skin(Gdx.files.internal("flat-earth-ui.json"));
@@ -311,7 +311,6 @@ public class CombatScreen extends BaseScreen {
                             dialog("You dealt " + damage + " with " + currentAttack.getName() + "!", BattleEvent.ENEMY_MOVE);
                         }
                     }
-
                 }
                 break;
             case ENEMY_MOVE:

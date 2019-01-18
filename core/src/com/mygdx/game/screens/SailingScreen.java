@@ -1,10 +1,12 @@
-package com.mygdx.game.sailing;
+package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -13,21 +15,25 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.mygdx.game.Enemy;
-import com.mygdx.game.PiratesGame;
 import com.mygdx.game.Player;
 import com.mygdx.game.base.BaseActor;
 import com.mygdx.game.base.BaseGame;
 import com.mygdx.game.base.BaseScreen;
-import com.mygdx.game.combat.CombatScreen;
+import com.mygdx.game.screens.combat.CombatScreen;
+import com.mygdx.game.screens.departmentscreen.ChemistryScreen;
+import com.mygdx.game.screens.departmentscreen.PhysicsScreen;
 
 import java.util.ArrayList;
 
 public class SailingScreen extends BaseScreen {
 
     private Player player;
-
     private Enemy enemy;
+
+    Label instructions;
 
     private ArrayList<BaseActor> obstacleList;
     private ArrayList<BaseActor> removeList;
@@ -97,11 +103,29 @@ public class SailingScreen extends BaseScreen {
                 solid.setPosition(r.x, r.y);
                 solid.setSize(r.width, r.height);
                 solid.setRectangleBoundary();
+                solid.setName(object.getName());
                 obstacleList.add(solid);
             } else {
                 System.err.println("Unknown PhysicsData object.");
             }
         }
+
+        BitmapFont font = new BitmapFont();
+        String text = " Press S to start, M for main menu ";
+        Label.LabelStyle style = new Label.LabelStyle(font, Color.YELLOW);
+        this.instructions = new Label(text, style);
+        instructions.setFontScale(5);
+        instructions.setPosition(100, 50);
+        // Repeating color pulse effect
+        instructions.addAction(Actions.forever(
+                Actions.sequence(
+                        Actions.color(new Color(1,1,0,1 ),0.5f),
+                        Actions.delay(0.5f),
+                        Actions.color(new Color(0.5f,0.5f,0,1),0.5f)
+                )
+        ));
+        instructions.setVisible(false);
+        uiStage.addActor(instructions);
     }
 
     @Override
@@ -111,12 +135,29 @@ public class SailingScreen extends BaseScreen {
         this.player.playerMove(dt);
 
         for (BaseActor obstacle : obstacleList) {
-            player.overlaps(obstacle, true);
+            if (player.overlaps(obstacle, true)) {
+                switch (obstacle.getName()) {
+                    case "chemistry":
+                        if (Gdx.input.isKeyPressed(Input.Keys.S)) game.setScreen(new ChemistryScreen(game, this));
+                        break;
+                    case "physics":
+                        if (Gdx.input.isKeyPressed(Input.Keys.S)) game.setScreen(new PhysicsScreen(game, this));
+                        break;
+                    case "derwent":
+                        break;
+                    case "vanbrugh":
+                        break;
+                    case "james":
+                        break;
+                    default:
+                        System.out.println("Pure obstacle");
+                }
+            }
         }
 
         if (player.overlaps(enemy, true)) {
-            game.setScreen(new CombatScreen(game, this.player, this.enemy.enemyShip));
-    }
+            game.setScreen(new CombatScreen(game, this.player, this.enemy.enemyShip, this));
+        }
 
         for (BaseActor ba : removeList) {
             ba.destroy();
@@ -161,9 +202,6 @@ public class SailingScreen extends BaseScreen {
     }
 
     public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.P) togglePaused();
-
-        if (keycode == Input.Keys.R) game.setScreen(new SailingScreen(game));
 
         return false;
     }

@@ -1,13 +1,15 @@
 package com.mygdx.game;
 
 import com.mygdx.game.base.BaseGame;
-import com.mygdx.game.sailing.SailingScreen;
+import com.mygdx.game.screens.SailingScreen;
 
 public class PiratesGame  extends BaseGame {
 
+    public SailingScreen gs;
+
     @Override
     public void create() {
-        SailingScreen gs = new SailingScreen(this);
+        gs = new SailingScreen(this);
         setScreen(gs);
     }
 }

@@ -18,6 +18,8 @@ public class BaseActor extends Group {
 
     protected List<? extends BaseActor> parentList;
 
+    private String name;
+
     public BaseActor() {
         super();
         region = new TextureRegion();
@@ -139,4 +141,7 @@ public class BaseActor extends Group {
         this.setPosition(target.getX() + target.getOriginX() - this.getOriginX(),
                 target.getY() + target.getOriginY() - this.getOriginY());
     }
+
+    public String getName() {return this.name;};
+    public void setName(String name) {this.name = name;}
 }

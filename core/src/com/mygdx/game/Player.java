@@ -4,9 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.game.base.PhysicsActor;
-import com.mygdx.game.combat.attacks.Attack;
-import com.mygdx.game.combat.attacks.GrapeShot;
-import com.mygdx.game.combat.attacks.Ram;
+import com.mygdx.game.screens.combat.attacks.Attack;
+import com.mygdx.game.screens.combat.attacks.GrapeShot;
+import com.mygdx.game.screens.combat.attacks.Ram;
 
 import java.util.ArrayList;
 import java.util.List;
