@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.game.base.PhysicsActor;
 
-import static com.mygdx.game.College.Derwent;
+import static com.mygdx.game.college.College.Derwent;
 import static com.mygdx.game.ShipType.Brig;
 
 public class Enemy extends PhysicsActor {

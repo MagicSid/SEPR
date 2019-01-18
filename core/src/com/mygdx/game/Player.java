@@ -11,7 +11,7 @@ import com.mygdx.game.screens.combat.attacks.Ram;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mygdx.game.College.Derwent;
+import static com.mygdx.game.college.College.Derwent;
 import static com.mygdx.game.ShipType.Brig;
 
 public class Player extends PhysicsActor {

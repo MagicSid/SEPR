@@ -1,10 +1,8 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.mygdx.game.college.College;
 
 public class Ship {
 
@@ -15,6 +13,7 @@ public class Ship {
     private int health;
     private ShipType type;
     private int healthMax;
+    private boolean isBoss = false;
     public Texture sailingTexture;
 
     private College college;
@@ -48,6 +47,12 @@ public class Ship {
     public Ship(ShipType type, String name, College college) {
         this(type, college);
         this.name = name;
+    }
+
+    public Ship(ShipType type, String name, College college, boolean isBoss) {
+        this(type, college);
+        this.name = name;
+        this.isBoss = isBoss;
     }
 
     public void damage(int amt){
@@ -94,6 +99,8 @@ public class Ship {
     public College getCollege() {
         return college;
     }
+
+    public boolean getIsBoss() { return this.isBoss; }
 
     public void setName(String name) { this.name = name; }
 

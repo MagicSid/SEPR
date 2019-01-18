@@ -354,6 +354,7 @@ public class CombatScreen extends BaseScreen {
                 player.addGold(10);
                 player.addPoints(10);
                 dialog("Congratulations, you have defeated Enemy " + enemy.getName(), BattleEvent.SCENE_RETURN);
+                if (enemy.getIsBoss() == true) enemy.getCollege().setIsBossDead(true);
                 break;
             case PLAYER_FLEES:
                 textBox.setStyle(game.skin.get("red", TextButton.TextButtonStyle.class));

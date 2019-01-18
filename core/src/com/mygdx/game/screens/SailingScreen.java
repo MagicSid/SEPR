@@ -3,10 +3,8 @@ package com.mygdx.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -16,9 +14,9 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.mygdx.game.DerwentBoss;
 import com.mygdx.game.Enemy;
 import com.mygdx.game.Player;
+import com.mygdx.game.Ship;
 import com.mygdx.game.base.BaseActor;
 import com.mygdx.game.base.BaseGame;
 import com.mygdx.game.base.BaseScreen;
@@ -29,14 +27,15 @@ import com.mygdx.game.screens.departmentscreen.PhysicsScreen;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static com.mygdx.game.college.College.Derwent;
+import static com.mygdx.game.college.College.James;
+import static com.mygdx.game.college.College.Vanbrugh;
+import static com.mygdx.game.ShipType.Brig;
+
 public class SailingScreen extends BaseScreen {
 
     private Player player;
     private Enemy enemy;
-
-    private DerwentBoss derwentBoss;
-
-    Label instructions;
 
     private ArrayList<BaseActor> obstacleList;
     private ArrayList<BaseActor> removeList;
@@ -67,9 +66,6 @@ public class SailingScreen extends BaseScreen {
         enemy = new Enemy();
         mainStage.addActor(enemy);
 
-        derwentBoss = new DerwentBoss();
-        mainStage.addActor(derwentBoss);
-
         obstacleList = new ArrayList<BaseActor>();
         removeList = new ArrayList<BaseActor>();
         regionList = new ArrayList<BaseActor>();
@@ -96,8 +92,6 @@ public class SailingScreen extends BaseScreen {
                 case "enemy":
                     enemy.setPosition(r.x, r.y);
                     break;
-                case "derwentboss":
-                    derwentBoss.setPosition(r.x, r.y);
                 default:
                     System.err.println("Unknown tilemap object: " + name);
             }
@@ -154,7 +148,7 @@ public class SailingScreen extends BaseScreen {
                         if (Gdx.input.isKeyPressed(Input.Keys.S)) game.setScreen(new PhysicsScreen(game, this));
                         break;
                     case "derwent":
-                        if (Gdx.input.isKeyPressed(Input.Keys.F)) game.setScreen(new CombatScreen(game, this.player, this.derwentBoss.bossShip, this));
+                        if (Gdx.input.isKeyPressed(Input.Keys.F) && Derwent.getIsBossDead() == false) game.setScreen(new CombatScreen(game, this.player, new Ship(Brig, "Derwent Boss" ,Derwent, true), this));
                         break;
                     case "vanbrugh":
                         break;
@@ -168,13 +162,32 @@ public class SailingScreen extends BaseScreen {
 
         for (BaseActor region : regionList) {
             if (player.overlaps(region, false)) {
+                int enemyChance = ThreadLocalRandom.current().nextInt(0, 10001);
                 switch (region.getName()) {
                     case "derwentregion":
-                        int enemyChance = ThreadLocalRandom.current().nextInt(0, 10001);
                         System.out.println(enemyChance);
+                        System.out.println(region.getName());
+                        if (Derwent.getIsBossDead() == true) region.setName("vanbrughregion");
                         if (enemyChance <= 20) {
-                            game.setScreen(new CombatScreen(game, this.player, new Enemy().enemyShip,this));
+                            game.setScreen(new CombatScreen(game, this.player, new Ship(Brig, Derwent),this));
                         }
+                        break;
+                    case "vanbrughregion":
+                        System.out.println(enemyChance);
+                        System.out.println(region.getName());
+                        if (enemyChance <= 20) {
+                            game.setScreen(new CombatScreen(game, this.player, new Ship(Brig, Vanbrugh),this));
+                        }
+                        break;
+                    case "jamesregion":
+                        System.out.println(enemyChance);
+                        System.out.println(region.getName());
+                        if (enemyChance <= 20) {
+                            game.setScreen(new CombatScreen(game, this.player, new Ship(Brig, James),this));
+                        }
+                        break;
+                    default:
+                        System.out.println("Unknown region");
                 }
             }
         }
