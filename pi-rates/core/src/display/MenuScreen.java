@@ -1,6 +1,8 @@
 package display;
 
 import base.BaseScreen;
+import game_manager.GameManager;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import game_manager.GameManager;
 
 public class MenuScreen extends BaseScreen {
     private SpriteBatch batch = new SpriteBatch();

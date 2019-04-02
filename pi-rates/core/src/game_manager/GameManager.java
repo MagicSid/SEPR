@@ -50,6 +50,7 @@ public class GameManager extends Game implements java.io.Serializable {
      * The difficulty that the player is playing on.
      */
     private Difficulty difficulty;
+    
 
     public void setPlayerShip(Ship playerShip) {
         this.playerShip = playerShip;
@@ -83,7 +84,7 @@ public class GameManager extends Game implements java.io.Serializable {
     public void setCollegeShip(Ship collegeShip) {
         this.collegeShip = collegeShip;
     }
-
+    
     private CombatPlayer combatPlayer = new CombatPlayer(playerShip);
 
     private Ship enemyShip = STARTER_SHIP.getShip();
@@ -173,9 +174,11 @@ public class GameManager extends Game implements java.io.Serializable {
         return food;
     }
 
-    public void addFood(int amount) {
-        this.food += amount;
-    }
+	
+	public void addFood(int amount) { 
+		this.food += amount; 
+	}
+	 
 
     public void deductFood(int amount) {
         food -= amount;
@@ -270,10 +273,13 @@ public class GameManager extends Game implements java.io.Serializable {
     	this.masterVolume = 0.1f;
         this.soundVolume = 0.5f;
         this.musicVolume = 0.5f;
+        
         this.ComputerScience = new Department(COMP_SCI_WEPS.getWeaponList(), COMP_SCI_UPGRADES.getRoomUpgradeList(), this);
         this.LawAndManagement = new Department(LMB_WEPS.getWeaponList(), LMB_UPGRADES.getRoomUpgradeList(), this);
         this.Physics = new Department(PHYS_WEPS.getWeaponList(), PHYS_UPGRADES.getRoomUpgradeList(), this);
+        
         this.playerShip = STARTER_SHIP.getShip();
+        this.combatPlayer = new CombatPlayer(playerShip);
     }
 
 

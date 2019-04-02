@@ -2,6 +2,8 @@ package display;
 
 import base.BaseActor;
 import base.BaseScreen;
+import game_manager.GameManager;
+
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.maps.MapObject;
@@ -16,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 
-import game_manager.GameManager;
 import location.College;
 import sailing.SailingShip;
 
@@ -251,6 +252,7 @@ public class SailingScreen extends BaseScreen {
                         game.setSailingShipX(this.playerShip.getX());
                         game.setSailingShipY(this.playerShip.getY());
                         game.setSailingShipRotation(this.playerShip.getRotation());
+                        getMusic().stop();
                         game.setScreen(new CombatScreen(game, false, college));
                     }
                 }

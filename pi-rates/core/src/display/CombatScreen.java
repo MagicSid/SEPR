@@ -269,6 +269,7 @@ public class CombatScreen extends BaseScreen {
                     try {
                         TimeUnit.SECONDS.sleep(3);
                     } catch (InterruptedException e) { }
+                    getMusic().stop();
                     changeScreen(new SailingScreen(game, false));
                 }
                 a++;

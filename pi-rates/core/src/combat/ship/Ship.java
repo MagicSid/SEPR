@@ -102,8 +102,8 @@ public class Ship implements java.io.Serializable {
      * Repair damage to the hull
      * @param damage Amount of damage to repair
      */
-    public void repairHull(int damage) {
-        hullHP += damage;
+    public void repairHull(int heal) {
+        hullHP += heal;
         if (hullHP > baseHullHP) {
             hullHP = baseHullHP;
         }

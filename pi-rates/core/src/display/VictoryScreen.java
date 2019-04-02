@@ -1,9 +1,10 @@
 package display;
 
 import base.BaseScreen;
+import game_manager.GameManager;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import game_manager.GameManager;
 
 public class VictoryScreen extends BaseScreen {
 	private Texture endBackground = new Texture("endBackground.png");
