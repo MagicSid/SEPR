@@ -276,6 +276,7 @@ public class SailingScreen extends BaseScreen {
                         game.setSailingShipX(this.playerShip.getX());
                         game.setSailingShipY(this.playerShip.getY());
                         game.setSailingShipRotation(this.playerShip.getRotation());
+                        getMusic().stop();
                         game.setScreen(new DepartmentScreen(game, obstacle.getDepartment()));
                     }
                 }
@@ -293,6 +294,7 @@ public class SailingScreen extends BaseScreen {
                             game.setSailingShipX(this.playerShip.getX());
                             game.setSailingShipY(this.playerShip.getY());
                             game.setSailingShipRotation(this.playerShip.getRotation());
+                            getMusic().stop();
                             game.setScreen(new MinigameScreen(game));
                         }
                     } else if (college.isBossAlive()) {
@@ -303,6 +305,7 @@ public class SailingScreen extends BaseScreen {
                             game.setSailingShipX(this.playerShip.getX());
                             game.setSailingShipY(this.playerShip.getY());
                             game.setSailingShipRotation(this.playerShip.getRotation());
+                            getMusic().stop();
                             game.setScreen(new CombatScreen(game, true, college));
                         }
                     } else {
@@ -365,6 +368,9 @@ public class SailingScreen extends BaseScreen {
         uiStage.draw();
 
         if (!gamePaused){
+        	if(!getMusic().isPlaying()) {
+        		getMusic().play();
+        	}
             uiStage.act(delta);
             mainStage.act(delta);
             update(delta);
@@ -379,6 +385,9 @@ public class SailingScreen extends BaseScreen {
         }
         else{
             pauseProcess();
+            if(getMusic().isPlaying()) {
+            	getMusic().pause();
+            }
         }
         super.inputForScreen();
     }

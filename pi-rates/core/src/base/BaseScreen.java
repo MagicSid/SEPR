@@ -208,7 +208,7 @@ public abstract class BaseScreen implements Screen {
      * Setting a new screen after calling the current one's dispose method
      */
     public void changeScreen(BaseScreen screen) {
-        music.stop();
+        getMusic().stop();
         dispose();
         game.setScreen(screen);
     }

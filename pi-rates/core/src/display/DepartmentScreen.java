@@ -341,6 +341,7 @@ public class DepartmentScreen extends BaseScreen {
         backButton.setPosition(880, 980);
         backButton.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y) {
+            	getMusic().stop();
                 Gdx.app.debug("Department DEBUG", "Button Pressed");
                 changeScreen(new SailingScreen(game, false));
             }

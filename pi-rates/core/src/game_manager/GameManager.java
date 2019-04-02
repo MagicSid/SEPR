@@ -262,6 +262,19 @@ public class GameManager extends Game implements java.io.Serializable {
         this.LawAndManagement = new Department(LMB_WEPS.getWeaponList(), LMB_UPGRADES.getRoomUpgradeList(), this);
         this.Physics = new Department(PHYS_WEPS.getWeaponList(), PHYS_UPGRADES.getRoomUpgradeList(), this);
     }
+    
+    public void resetgamestate() {
+    	this.gold = STARTING_GOLD;
+    	this.food = STARTING_FOOD;
+    	this.points = 0;
+    	this.masterVolume = 0.1f;
+        this.soundVolume = 0.5f;
+        this.musicVolume = 0.5f;
+        this.ComputerScience = new Department(COMP_SCI_WEPS.getWeaponList(), COMP_SCI_UPGRADES.getRoomUpgradeList(), this);
+        this.LawAndManagement = new Department(LMB_WEPS.getWeaponList(), LMB_UPGRADES.getRoomUpgradeList(), this);
+        this.Physics = new Department(PHYS_WEPS.getWeaponList(), PHYS_UPGRADES.getRoomUpgradeList(), this);
+        this.playerShip = STARTER_SHIP.getShip();
+    }
 
 
 

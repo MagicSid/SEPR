@@ -67,12 +67,15 @@ public class MenuScreen extends BaseScreen {
         newGame.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y){
                 Gdx.app.debug("Menu DEBUG", "New button pressed");
+                getMusic().stop();
+                game.resetgamestate();
                 changeScreen(new SailingScreen(game, true));
             }
         });
 
         loadGame.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y){
+            	getMusic().stop();
                 Gdx.app.debug("Menu DEBUG", "Load button pressed");
                 changeScreen(new SailingScreen(loadGame(prefs), false));
             }
@@ -80,6 +83,7 @@ public class MenuScreen extends BaseScreen {
 
         exitGame.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y){
+            	getMusic().stop();
                 Gdx.app.debug("Menu DEBUG", "Exit button pressed");
                 Gdx.app.exit();
             }
