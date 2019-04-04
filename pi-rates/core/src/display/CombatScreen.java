@@ -431,8 +431,8 @@ public class CombatScreen extends BaseScreen {
 
         pointsLabel = new Label("Score: " + game.getPoints() ,skin);
         goldLabel = new Label("Gold: " + game.getGold() ,skin);
-        foodLabel = new Label("Food: " + game.getFood() ,skin);
-        crewLabel = new Label("Crew: " + playerShip.getCrew() ,skin);
+        foodLabel = new Label("Crew: " + game.getCrew() ,skin);
+        crewLabel = new Label("Crew: " + playerShip.getAutorepair() ,skin);
 
         groupPlayerBar.addActor(hpImage);
         groupPlayerBar.addActor(playerHpBar);
@@ -450,8 +450,7 @@ public class CombatScreen extends BaseScreen {
     private void updateInfo(){
         pointsLabel.setText("Score: " + game.getPoints());
         goldLabel.setText("Gold: " + game.getGold());
-        foodLabel.setText("Food: " + game.getFood());
-        crewLabel.setText("Crew: " + playerShip.getCrew());
+        foodLabel.setText("Crew: " + game.getCrew());
 
         hpLabelE1.setText("HP:" + playerShip.getRoom(NON_FUNCTIONAL).getHp());
         hpLabelE2.setText("HP:" + playerShip.getRoom(NON_FUNCTIONAL).getHp());

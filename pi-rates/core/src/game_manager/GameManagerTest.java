@@ -34,19 +34,19 @@ public class GameManagerTest {
     }
 
     @Test
-    public void addFood() {
-        tester.addFood(50);
-        assertEquals("Food should be added to the players food value", Constants.STARTING_FOOD + 50,
-                tester.getFood());
+    public void addCrew() {
+        tester.addCrew(50);
+        assertEquals("Crew should be added to the players food value", Constants.STARTING_FOOD + 50,
+                tester.getCrew());
     }
 
     @Test
-    public void deductFood() {
-        tester.deductFood(Constants.STARTING_FOOD - 5);
-        assertEquals("Food should be removed from the players food value", 5, tester.getFood());
+    public void deductCrew() {
+        tester.deductCrew(Constants.STARTING_FOOD - 5);
+        assertEquals("Crew should be removed from the players food value", 5, tester.getCrew());
 
-        tester.deductFood(Constants.STARTING_FOOD + 10);
-        assertEquals("Food should not be allowed to go below 0", 0, tester.getFood());
+        tester.deductCrew(Constants.STARTING_FOOD + 10);
+        assertEquals("Crew should not be allowed to go below 0", 0, tester.getCrew());
     }
 
     @Test

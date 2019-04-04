@@ -14,9 +14,9 @@ import static other.Constants.*;
  */
 public class Ship implements java.io.Serializable {
     /**
-     * The number of crew on the ship, affects room repair speed.
+     * The number of autorepair on the ship, affects room repair speed.
      */
-    private int crew;
+    private int autorepair;
 
     /**
      * The rooms on the ship
@@ -32,8 +32,8 @@ public class Ship implements java.io.Serializable {
      */
     private int baseHullHP;
     private int hullHP;
-    public Ship(int crew, List<Room> rooms, List<Weapon> weapons, int baseHullHP, int hullHP) {
-        this.crew = crew;
+    public Ship(int autorepair, List<Room> rooms, List<Weapon> weapons, int baseHullHP, int hullHP) {
+        this.autorepair = autorepair;
         this.rooms = rooms;
         while (weapons.contains(null)) {
             weapons.remove(null);
@@ -43,16 +43,16 @@ public class Ship implements java.io.Serializable {
         this.hullHP = hullHP;
     }
 
-    public Ship(int crew, List<Room> rooms, List<Weapon> weapons, int baseHullHP) {
-        this.crew = crew;
+    public Ship(int autorepair, List<Room> rooms, List<Weapon> weapons, int baseHullHP) {
+        this.autorepair = autorepair;
         this.rooms = rooms;
         this.weapons = weapons;
         this.baseHullHP = baseHullHP;
         this.hullHP = baseHullHP;
     }
 
-    public int getCrew() {
-        return crew;
+    public int getAutorepair() {
+        return autorepair;
     }
 
     /**
@@ -137,7 +137,7 @@ public class Ship implements java.io.Serializable {
     }
 
     public void addCrew(int amount) {
-        crew += amount;
+        autorepair += amount;
     }
 
     /**
@@ -187,7 +187,7 @@ public class Ship implements java.io.Serializable {
      * @return Percentage of health to be repaired on the a room each turn of combat
      */
     public double calculateRepair() {
-        return BASE_SHIP_REPAIR * calculateCrewEffectiveness() * getRoom(RoomFunction.CREW_QUARTERS).getMultiplier();
+        return BASE_SHIP_REPAIR * calculateAutorepairEffectiveness() * getRoom(RoomFunction.CREW_QUARTERS).getMultiplier();
     }
 
     /**
@@ -201,11 +201,11 @@ public class Ship implements java.io.Serializable {
     }
 
     /**
-     * The more crew you have, the more effective your repairing is. However this tapers off as you get to higher
-     * numbers of crew so that you can't fully repair every room
+     * The more autorepair you have, the more effective your repairing is. However this tapers off as you get to higher
+     * numbers of autorepair so that you can't fully repair every room
      * @return
      */
-    private Double calculateCrewEffectiveness() {
-        return 0.6666 * log(0.2 * crew + 1) + 0.67;
+    private Double calculateAutorepairEffectiveness() {
+        return 0.6666 * log(0.2 * autorepair + 1) + 0.67;
     }
 }

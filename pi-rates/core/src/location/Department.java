@@ -109,7 +109,7 @@ public class Department implements java.io.Serializable {
             if (price * amount > gameManager.getGold()) {
                 throw new IllegalStateException("Not enough gold");
             } else {
-                gameManager.addFood(amount);
+                gameManager.addCrew(amount);
                 gameManager.payGold(price * amount);
             }
         }

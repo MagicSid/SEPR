@@ -43,6 +43,7 @@ public class DepartmentScreen extends BaseScreen {
     private Table resource2 = new Table();
     private Table resource3 = new Table();
 
+    private Label goldLabel;
     /**
      * Sets up department to retrieve values
      */
@@ -71,6 +72,22 @@ public class DepartmentScreen extends BaseScreen {
         buttonAtlas = new TextureAtlas("buttonSpriteSheet.txt");
         skin.addRegions(buttonAtlas);
         buttonTable = new Table();
+        
+        Table uiTable = new Table();
+
+        Label goldTextLabel = new Label("Gold:", skin, "default_black");
+        goldLabel = new Label(Integer.toString(game.getGold()), skin, "default_black");
+        goldLabel.setAlignment(Align.left);
+
+        uiTable.add(goldTextLabel);
+        uiTable.add(goldTextLabel).width(goldTextLabel.getWidth());
+        uiTable.add(goldLabel).fill();
+
+        uiTable.align(Align.topRight);
+        uiTable.setFillParent(true);
+
+        // The below line doesn't add the label correctly. Need help working this 1 out.
+        //mainStage.addActor(uiTable);
 
 
         textButtonStyle.font = skin.getFont("default-font");
@@ -82,6 +99,7 @@ public class DepartmentScreen extends BaseScreen {
         weaponBuyTableList = new ArrayList<Table>();
         weaponSellTableList = new ArrayList<Table>();
         roomTableList = new ArrayList<Table>();
+       
 
         for (int i = 0; i <= 3; i++){
             weaponBuyTableList.add(new Table());
@@ -145,6 +163,8 @@ public class DepartmentScreen extends BaseScreen {
         Gdx.input.setInputProcessor(mainStage);
 
         batch.begin();
+        
+        goldLabel.setText(Integer.toString(game.getGold()));
 
         drawFriendlyShip();
 
@@ -330,8 +350,7 @@ public class DepartmentScreen extends BaseScreen {
 
         indicatorFont.draw(batch, "Score: " + game.getPoints(), 25, 965);
         indicatorFont.draw(batch, "Gold: " + game.getGold(), 110, 965);
-        indicatorFont.draw(batch, "Food: " + game.getFood(), 195, 965);
-        indicatorFont.draw(batch, "Crew: " + playerShip.getCrew(), 280, 965);
+        indicatorFont.draw(batch, "Crew: " + game.getCrew(), 195, 965);
     }
 
     /**
@@ -544,12 +563,12 @@ public class DepartmentScreen extends BaseScreen {
      */
     public void drawBuyResourceFeatures(){
         buyResourceButtonList.add(new TextButton("Buy (" + CREW_COST + "g)", textButtonStyle));
-        resource1.add(new Label("Crew", skin));
+        resource1.add(new Label("Battle Repair", skin));
         resource1.row();
         resource1.add(buyResourceButtonList.get(0));
 
         buyResourceButtonList.add(new TextButton("Buy (" + FOOD_COST + "g)", textButtonStyle));
-        resource2.add(new Label("Food", skin));
+        resource2.add(new Label("Crew", skin));
         resource2.row();
         resource2.add(buyResourceButtonList.get(1));
 

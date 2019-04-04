@@ -32,11 +32,11 @@ public class GameManager extends Game implements java.io.Serializable {
 
 
     /**
-     * A resource tied to crew and travelling. As you travel you use up food. The more crew you have, the faster you use
-     * it. This stops you ending up with a massive crew and means that you cant stay at sea for ever, progressing the
-     * game.
+     * Changed.
+     * A resource tied to boarding. Food was originally not used at all so this has been replaced by crew for boarding.
+     * Old crew will be changed to auto-repair.
      */
-    private int food;
+    private int crew;
     /**
      * Points are accumulated by killing ships etc. They go toward recording the high scores.
      */
@@ -60,8 +60,8 @@ public class GameManager extends Game implements java.io.Serializable {
         this.gold = gold;
     }
 
-    public void setFood(int food) {
-        this.food = food;
+    public void setCrew(int crew) {
+        this.crew = crew;
     }
 
     public void setPoints(int points) {
@@ -170,20 +170,20 @@ public class GameManager extends Game implements java.io.Serializable {
         return true;
     }
 
-    public int getFood() {
-        return food;
+    public int getCrew() {
+        return crew;
     }
 
 	
-	public void addFood(int amount) { 
-		this.food += amount; 
+	public void addCrew(int amount) { 
+		this.crew += amount; 
 	}
 	 
 
-    public void deductFood(int amount) {
-        food -= amount;
-        if (food < 0) {
-            food = 0;
+    public void deductCrew(int amount) {
+        crew -= amount;
+        if (crew < 0) {
+            crew = 0;
         }
     }
 
@@ -255,7 +255,7 @@ public class GameManager extends Game implements java.io.Serializable {
         this.playerName = playerName;
         this.difficulty = difficulty;
         this.gold = STARTING_GOLD;
-        this.food = STARTING_FOOD;
+        this.crew = STARTING_FOOD;
         this.points = 0;
         this.masterVolume = 0.1f;
         this.soundVolume = 0.5f;
@@ -268,7 +268,7 @@ public class GameManager extends Game implements java.io.Serializable {
     
     public void resetgamestate() {
     	this.gold = STARTING_GOLD;
-    	this.food = STARTING_FOOD;
+    	this.crew = STARTING_FOOD;
     	this.points = 0;
     	this.masterVolume = 0.1f;
         this.soundVolume = 0.5f;

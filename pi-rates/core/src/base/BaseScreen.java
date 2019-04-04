@@ -363,7 +363,7 @@ public abstract class BaseScreen implements Screen {
 
         prefs.putInteger("points", game.getPoints());
         prefs.putInteger("gold", game.getGold());
-        prefs.putInteger("food", game.getFood());
+        prefs.putInteger("food", game.getCrew());
         prefs.putString("name", game.getPlayerName());
         prefs.putString("difficulty", encodedDifficulty);
         prefs.putFloat("shipX", game.getSailingShipX());
@@ -400,7 +400,7 @@ public abstract class BaseScreen implements Screen {
 
         game.setPoints(prefs.getInteger("points"));
         game.setGold(prefs.getInteger("gold"));
-        game.setFood(prefs.getInteger("food"));
+        game.addCrew(prefs.getInteger("food"));
         game.setPlayerName(prefs.getString("name"));
         game.setDifficulty((Difficulty) SerializationUtils.deserialize(Base64.getDecoder().decode(prefs.getString("difficulty"))));
         game.setSailingShipX(prefs.getFloat("shipX"));
