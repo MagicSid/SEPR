@@ -121,6 +121,7 @@ public class MinigameScreen extends BaseScreen {
 		toSailing.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
 				Gdx.app.debug("Sailing DEBUG", "Button Pressed");
+				getMusic().stop();
 				changeScreen(new SailingScreen(game, false));
 			}
 		});

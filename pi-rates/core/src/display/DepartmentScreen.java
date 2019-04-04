@@ -3,13 +3,17 @@ package display;
 import banks.CoordBank;
 import base.BaseScreen;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
@@ -43,7 +47,7 @@ public class DepartmentScreen extends BaseScreen {
     private Table resource2 = new Table();
     private Table resource3 = new Table();
 
-    private Label goldLabel;
+    private Stage mainStage = new Stage();
     /**
      * Sets up department to retrieve values
      */
@@ -65,30 +69,13 @@ public class DepartmentScreen extends BaseScreen {
         musicSetup("heroic-age.mp3", true);
 
         this.playerShip = game.getPlayerShip();
-
+                
         df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.CEILING);
 
         buttonAtlas = new TextureAtlas("buttonSpriteSheet.txt");
         skin.addRegions(buttonAtlas);
         buttonTable = new Table();
-        
-        Table uiTable = new Table();
-
-        Label goldTextLabel = new Label("Gold:", skin, "default_black");
-        goldLabel = new Label(Integer.toString(game.getGold()), skin, "default_black");
-        goldLabel.setAlignment(Align.left);
-
-        uiTable.add(goldTextLabel);
-        uiTable.add(goldTextLabel).width(goldTextLabel.getWidth());
-        uiTable.add(goldLabel).fill();
-
-        uiTable.align(Align.topRight);
-        uiTable.setFillParent(true);
-
-        // The below line doesn't add the label correctly. Need help working this 1 out.
-        //mainStage.addActor(uiTable);
-
 
         textButtonStyle.font = skin.getFont("default-font");
         textButtonStyle.up = skin.getDrawable("buttonUp");
@@ -124,7 +111,7 @@ public class DepartmentScreen extends BaseScreen {
         buttonTable.setFillParent(true);
         buttonTable.align(Align.center);
         buttonTable.setDebug(false);
-
+        
         buttonToMenu();
         drawShop();
 
@@ -160,21 +147,21 @@ public class DepartmentScreen extends BaseScreen {
 
     @Override
     public void update(float delta){
+    	
         Gdx.input.setInputProcessor(mainStage);
-
+        
         batch.begin();
         
-        goldLabel.setText(Integer.toString(game.getGold()));
-
         drawFriendlyShip();
-
         drawHealthBar();
         drawIndicators();
-
-
+        
+        
         batch.end();
-
+        
         mainStage.draw();
+        
+                
     }
 
     @Override
@@ -185,11 +172,12 @@ public class DepartmentScreen extends BaseScreen {
         buttonAtlas = new TextureAtlas("buttonSpriteSheet.txt");
         skin.addRegions(buttonAtlas);
 
-//        textButtonStyle.fontColor = Color.BLACK;
+//      textButtonStyle.fontColor = Color.BLACK;
         textButtonStyle.up = skin.getDrawable("buttonUp");
         textButtonStyle.down = skin.getDrawable("buttonDown");
 
     }
+    
 
     // THIS IS NEW
     private Texture background;
@@ -231,6 +219,7 @@ public class DepartmentScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
+
     }
 
     @Override
@@ -264,6 +253,7 @@ public class DepartmentScreen extends BaseScreen {
      * @param max
      * @return returns random int between 0 and max - 1
      */
+    @Deprecated
     public int pickRandom(int max) {
         Random rand = new Random();
         return rand.nextInt(max);
@@ -348,7 +338,7 @@ public class DepartmentScreen extends BaseScreen {
     public void drawIndicators(){
         indicatorFont.setColor(1,1,1,1);
 
-        indicatorFont.draw(batch, "Score: " + game.getPoints(), 25, 965);
+        indicatorFont.draw(batch, "Points: " + game.getPoints(), 25, 965);
         indicatorFont.draw(batch, "Gold: " + game.getGold(), 110, 965);
         indicatorFont.draw(batch, "Crew: " + game.getCrew(), 195, 965);
     }

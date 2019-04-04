@@ -262,6 +262,7 @@ public class CombatScreen extends BaseScreen {
             }
 
             if (colleges.isEmpty()) {
+            	getMusic().stop();
                 changeScreen(new VictoryScreen(game));
             } else {
                 //Waits 5 Loops to ensure Above messages render, Sleeps, then returns to menu
