@@ -69,7 +69,7 @@ public class DepartmentScreen extends BaseScreen {
         musicSetup("heroic-age.mp3", true);
 
         this.playerShip = game.getPlayerShip();
-                
+        
         df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.CEILING);
 
@@ -116,6 +116,8 @@ public class DepartmentScreen extends BaseScreen {
         drawShop();
 
     }
+    
+    
 //TODO Prevent shop being able to sell more than 4 items/player being able to sell all items
     private void drawShop(){
         for (int i = 0; i <= 3; i++){
@@ -150,6 +152,8 @@ public class DepartmentScreen extends BaseScreen {
     	
         Gdx.input.setInputProcessor(mainStage);
         
+        mainStage.draw();
+        
         batch.begin();
         
         drawFriendlyShip();
@@ -159,9 +163,7 @@ public class DepartmentScreen extends BaseScreen {
         
         batch.end();
         
-        mainStage.draw();
         
-                
     }
 
     @Override
