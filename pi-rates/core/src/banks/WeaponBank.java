@@ -43,7 +43,10 @@ public enum WeaponBank {
             DEFAULT_WEAPON_CRIT_CHANCE * 3, DEFAULT_WEAPON_HIT_CHANCE),
 
     WATER("Water Cannon", DEFAULT_WEAPON_COST / 3, DEFAULT_WEAPON_DAMAGE / 3, DEFAULT_WEAPON_COOLDOWN / 3,
-            DEFAULT_WEAPON_CRIT_CHANCE, DEFAULT_WEAPON_HIT_CHANCE);
+            DEFAULT_WEAPON_CRIT_CHANCE, DEFAULT_WEAPON_HIT_CHANCE),
+	
+	BOARDING("Boarding Harpoon",DEFAULT_WEAPON_COST/4, DEFAULT_WEAPON_DAMAGE*4,DEFAULT_WEAPON_COOLDOWN / 3,
+			0.0, 1.0,25);
 
     // Internal workings of the enum
     private String name;
@@ -52,6 +55,7 @@ public enum WeaponBank {
     private int baseCooldown;
     private double baseCritChance;
     private double baseChanceToHit;
+    private int crewcost;
 
     // Internal workings of the enum
     WeaponBank(String name, int cost, int baseDamage, int baseCooldown, double baseCritChance, double baseChanceToHit) {
@@ -61,12 +65,25 @@ public enum WeaponBank {
         this.baseCooldown = baseCooldown;
         this.baseCritChance = baseCritChance;
         this.baseChanceToHit = baseChanceToHit;
+        this.crewcost = 0;
+    }
+    
+    // send constructor to include crewcost
+    WeaponBank(String name, int cost, int baseDamage, int baseCooldown, double baseCritChance, double baseChanceToHit, int crewcost) {
+        this.name = name;
+        this.cost = cost;
+        this.baseDamage = baseDamage;
+        this.baseCooldown = baseCooldown;
+        this.baseCritChance = baseCritChance;
+        this.baseChanceToHit = baseChanceToHit;
+        this.crewcost = crewcost;
     }
 
     /**
      * @return An instance of a weapon
      */
     public Weapon getWeapon() {
-        return new Weapon(name, cost, baseDamage, baseCooldown, baseCritChance, baseChanceToHit);
+        return new Weapon(name, cost, baseDamage, baseCooldown, baseCritChance, baseChanceToHit,crewcost);
     }
+    
 }

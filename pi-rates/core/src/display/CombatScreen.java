@@ -581,10 +581,14 @@ public class CombatScreen extends BaseScreen {
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     try {
                         weaponSelected = playerWeapons.get(j);
-                        if (weaponSelected.getCurrentCooldown()!= 0) {
+                        if (weaponSelected.getCrewCost() >= game.getCrew()) {
+                        	fire.setText("Not enough crew");
+                        	weaponSelected = null;
+                        }
+                        else if (weaponSelected.getCurrentCooldown()!= 0) {
                         	fire.setText("Pass");
                         }else {
-                        	fire.setText("Fire");
+                        	fire.setText("Fire. Crew Cost:"+weaponSelected.getCrewCost());
                         }
                     } catch (IndexOutOfBoundsException e) {
                     }
@@ -619,6 +623,7 @@ public class CombatScreen extends BaseScreen {
                         //Runs the players Combat Loop
                         combatManager.combatLoop(combatPlayer, combatEnemy, roomSelected, weaponSelected);
                         playSound(cannon_1);
+                        game.setCrew(game.getCrew()- weaponSelected.getCrewCost());
                         //Displays if the Player Hit or Missed
                         if (combatManager.getShotHit()){
                             Gdx.app.log("Combat", "Attack Hit");
@@ -674,17 +679,50 @@ public class CombatScreen extends BaseScreen {
         
         
 		
-        final TextButton flee = new TextButton("Pass",weaponButtonStyle);
+        final TextButton flee = new TextButton("Flee",weaponButtonStyle);
         attackTable.add(flee);
         
         flee.addListener(new InputListener() { public boolean touchDown(InputEvent
         		event, float x, float y, int pointer, int button) {
         	
-        	// Code goes here for flee. - Combine code from pass in fire button and game over code to get back to sailing.
-        	// use random num perhaps 90% fixed chance to succeed at fleeing?
-		  
-        	return true; 
+        	double fleecheck = Math.random();
+        	if (fleecheck > 0.1 ) {
+        		gameOver = true;
+                gameWon = false;
+        		
+        	}else {
+        		//Need to Display flee failed here not finished.
+        		
+	        	//Runs enemy Combat Loop
+	            if (combatEnemy.hasWepaonsReady()){
+	                combatManager.enemyCombatLoop(combatEnemy, combatPlayer);
+	                //Displays if Enemy Hit or Missed
+	                if (combatManager.getShotHit()){
+	                    hitFeedbackTime = 0;
+	                    enemyHit.setVisible(true);
+	                } else {
+	                    hitFeedbackTime = 0;
+	                    enemyMissed.setVisible(true);
+	                }
+	            } else {
+	                for (Weapon weapon : enemyShip.getWeapons()) {
+	                    weapon.decrementCooldown(COOLDOWN_TICKS_PER_TURN);
+	                }
+	                enemyShip.combatRepair();
+	            }
+	
+	            if (playerShip.getHullHP() <= 0) {
+	                gameOver = true;
+	                gameWon = false;
+	            } else if (enemyShip.getHullHP() <= 0) {
+	                gameOver = true;
+	                gameWon = true;
+	            }
+	            hitFeedbackTime = 0;
         	} 
+        	
+        	return true; 
+        	}
         });
 		  
 		  

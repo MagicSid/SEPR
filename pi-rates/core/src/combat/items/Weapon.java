@@ -35,6 +35,12 @@ public class Weapon implements java.io.Serializable{
      * Cooldown value of weapon. When this is 0 the weapon can fire.
      */
     private int currentCooldown;
+    
+    /**
+     * Crew cost to fire the weapon. Used for boarding. Can't fire if you don't enough crew. Defaults to 0
+     */
+    
+    private int crewcost;
 
     /**
      * @param name       The name of the weapon in shops
@@ -53,6 +59,19 @@ public class Weapon implements java.io.Serializable{
         this.critChance = critChance;
         this.accuracy = accuracy;
         this.currentCooldown = 0;
+        this.crewcost = 0;
+    }
+    
+    public Weapon(String name, int cost, int baseDamage, int cooldown, double critChance,
+            double accuracy,int crewcost) {
+    	this.name = name;
+    	this.cost = cost;
+    	this.damage = baseDamage;
+    	this.cooldown = cooldown;
+    	this.critChance = critChance;
+    	this.accuracy = accuracy;
+    	this.currentCooldown = 0;
+    	this.crewcost = crewcost;
     }
 
     public String getName() {
@@ -81,6 +100,9 @@ public class Weapon implements java.io.Serializable{
 
     public int getCurrentCooldown() {
         return currentCooldown;
+    }
+    public int getCrewCost() {
+    	return crewcost;
     }
 
     /**
