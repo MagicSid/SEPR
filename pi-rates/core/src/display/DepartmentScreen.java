@@ -343,6 +343,7 @@ public class DepartmentScreen extends BaseScreen {
         indicatorFont.draw(batch, "Points: " + game.getPoints(), 25, 965);
         indicatorFont.draw(batch, "Gold: " + game.getGold(), 110, 965);
         indicatorFont.draw(batch, "Crew: " + game.getCrew(), 195, 965);
+        indicatorFont.draw(batch, "Autorepair: " + df.format(playerShip.calculateRepair()) + "%",280,965);
     }
 
     /**

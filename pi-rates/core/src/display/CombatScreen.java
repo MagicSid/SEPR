@@ -473,7 +473,7 @@ public class CombatScreen extends BaseScreen {
                 weaponButtons.get(i).setTouchable(Touchable.enabled);
             } else {
                 cooldownList.get(i).setText("Cooldown: " + (weapon.getCurrentCooldown() / COOLDOWN_TICKS_PER_TURN) + "Turns");
-                weaponButtons.get(i).setTouchable(Touchable.disabled);
+                //weaponButtons.get(i).setTouchable(Touchable.disabled);
             }
             i++;
         }
@@ -536,6 +536,7 @@ public class CombatScreen extends BaseScreen {
                                }
                            });
     }
+    
 
     /**
      * Draws buttons for Each weapon the user has which can be pressed to fire
@@ -552,7 +553,9 @@ public class CombatScreen extends BaseScreen {
         weaponButtonStyle.down = weaponButtonSkin.getDrawable("weaponButtonDown");
         weaponButtonStyle.checked = weaponButtonSkin.getDrawable("weaponButtonChecked");
         weaponButtonStyle.font = new BitmapFont();
-
+        
+        final TextButton fire = new TextButton("choose a weapon", weaponButtonStyle);
+        
         final List<Weapon> playerWeapons = playerShip.getWeapons();
 
         weaponButtonGroup.setMaxCheckCount(1);
@@ -562,7 +565,7 @@ public class CombatScreen extends BaseScreen {
             attackTable.add(cooldownList.get(i));
         }
         attackTable.row();
-
+        
         int i = 0;
         while (i < 4) {
             final int j = i;
@@ -578,6 +581,11 @@ public class CombatScreen extends BaseScreen {
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     try {
                         weaponSelected = playerWeapons.get(j);
+                        if (weaponSelected.getCurrentCooldown()!= 0) {
+                        	fire.setText("Pass");
+                        }else {
+                        	fire.setText("Fire");
+                        }
                     } catch (IndexOutOfBoundsException e) {
                     }
                     return true;
@@ -591,9 +599,10 @@ public class CombatScreen extends BaseScreen {
 
 
 
-        final TextButton fire = new TextButton("Fire", weaponButtonStyle);
+        
         attackTable.add(fire).padLeft(fire.getPrefWidth());
-
+        
+        
 
         fire.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -655,12 +664,36 @@ public class CombatScreen extends BaseScreen {
                     hitFeedbackTime = 0;
 
                 }
+                fire.setText("choose a weapon");
                 return true;
             }
         });
 
         fire.setChecked(false);
+        
+        
+        
+		
+        final TextButton flee = new TextButton("Pass",weaponButtonStyle);
+        attackTable.add(flee);
+        
+        flee.addListener(new InputListener() { public boolean touchDown(InputEvent
+        		event, float x, float y, int pointer, int button) {
+        	
+        	// Code goes here for flee. - Combine code from pass in fire button and game over code to get back to sailing.
+        	// use random num perhaps 90% fixed chance to succeed at fleeing?
+		  
+        	return true; 
+        	} 
+        });
+		  
+		  
+		  
+		  
+        flee.setChecked(false);
+		 
         weaponButtonGroup.uncheckAll();
+        
     }
 
     private ArrayList<Label> cooldownList;
