@@ -1,6 +1,8 @@
 package display;
 
 import base.BaseScreen;
+import game_manager.GameManager;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import game_manager.GameManager;
 
 public class MenuScreen extends BaseScreen {
     private SpriteBatch batch = new SpriteBatch();
@@ -67,12 +68,15 @@ public class MenuScreen extends BaseScreen {
         newGame.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y){
                 Gdx.app.debug("Menu DEBUG", "New button pressed");
+                getMusic().stop();
+                game.resetgamestate();
                 changeScreen(new SailingScreen(game, true));
             }
         });
 
         loadGame.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y){
+            	getMusic().stop();
                 Gdx.app.debug("Menu DEBUG", "Load button pressed");
                 changeScreen(new SailingScreen(loadGame(prefs), false));
             }
@@ -80,6 +84,7 @@ public class MenuScreen extends BaseScreen {
 
         exitGame.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y){
+            	getMusic().stop();
                 Gdx.app.debug("Menu DEBUG", "Exit button pressed");
                 Gdx.app.exit();
             }

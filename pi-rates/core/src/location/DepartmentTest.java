@@ -4,6 +4,7 @@ import combat.items.RoomUpgrade;
 import combat.items.Weapon;
 import combat.ship.RoomFunction;
 import game_manager.GameManager;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -96,29 +97,29 @@ public class DepartmentTest {
     }
 
     @Test
-    public void buyResourceFood() {
+    public void buyResourceCrew() {
         Map<Resource, Integer> resourceStock = tester.getResourceStock();
         int goldBefore = testGM.getGold();
-        int foodBefore = testGM.getFood();
+        int foodBefore = testGM.getCrew();
         tester.buyResource(Resource.FOOD, 5);
         assertEquals("Resource stock should not change since resources are not consumed from shop",
                 resourceStock, tester.getResourceStock());
-        assertEquals("Food should be added to game manager's food count", foodBefore + 5,
-                testGM.getFood());
+        assertEquals("Crew should be added to game manager's food count", foodBefore + 5,
+                testGM.getCrew());
         assertEquals("Gold should be deducted from game manager's gold count",
                 goldBefore - (5 * resourceStock.get(Resource.FOOD)), testGM.getGold());
     }
 
     @Test
-    public void buyResourceCrew() {
+    public void buyResourceAutorepair() {
         Map<Resource, Integer> resourceStock = tester.getResourceStock();
         int goldBefore = testGM.getGold();
-        int crewBefore = testGM.getPlayerShip().getCrew();
+        int crewBefore = testGM.getPlayerShip().getAutorepair();
         tester.buyResource(Resource.CREW, 5);
         assertEquals("Resource stock should not change since resources are not consumed from shop",
                 resourceStock, tester.getResourceStock());
         assertEquals("Crew should be added to ship's crew count", crewBefore + 5,
-                testGM.getPlayerShip().getCrew());
+                testGM.getPlayerShip().getAutorepair());
         assertEquals("Gold should be deducted from game manager's gold count",
                 goldBefore - (5 * resourceStock.get(Resource.CREW)), testGM.getGold());
     }

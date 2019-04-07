@@ -262,6 +262,7 @@ public class CombatScreen extends BaseScreen {
             }
 
             if (colleges.isEmpty()) {
+            	getMusic().stop();
                 changeScreen(new VictoryScreen(game));
             } else {
                 //Waits 5 Loops to ensure Above messages render, Sleeps, then returns to menu
@@ -269,6 +270,7 @@ public class CombatScreen extends BaseScreen {
                     try {
                         TimeUnit.SECONDS.sleep(3);
                     } catch (InterruptedException e) { }
+                    getMusic().stop();
                     changeScreen(new SailingScreen(game, false));
                 }
                 a++;
@@ -430,8 +432,8 @@ public class CombatScreen extends BaseScreen {
 
         pointsLabel = new Label("Score: " + game.getPoints() ,skin);
         goldLabel = new Label("Gold: " + game.getGold() ,skin);
-        foodLabel = new Label("Food: " + game.getFood() ,skin);
-        crewLabel = new Label("Crew: " + playerShip.getCrew() ,skin);
+        foodLabel = new Label("Crew: " + game.getCrew() ,skin);
+        crewLabel = new Label("Crew: " + playerShip.getAutorepair() ,skin);
 
         groupPlayerBar.addActor(hpImage);
         groupPlayerBar.addActor(playerHpBar);
@@ -449,8 +451,7 @@ public class CombatScreen extends BaseScreen {
     private void updateInfo(){
         pointsLabel.setText("Score: " + game.getPoints());
         goldLabel.setText("Gold: " + game.getGold());
-        foodLabel.setText("Food: " + game.getFood());
-        crewLabel.setText("Crew: " + playerShip.getCrew());
+        foodLabel.setText("Crew: " + game.getCrew());
 
         hpLabelE1.setText("HP:" + playerShip.getRoom(NON_FUNCTIONAL).getHp());
         hpLabelE2.setText("HP:" + playerShip.getRoom(NON_FUNCTIONAL).getHp());
@@ -472,7 +473,7 @@ public class CombatScreen extends BaseScreen {
                 weaponButtons.get(i).setTouchable(Touchable.enabled);
             } else {
                 cooldownList.get(i).setText("Cooldown: " + (weapon.getCurrentCooldown() / COOLDOWN_TICKS_PER_TURN) + "Turns");
-                weaponButtons.get(i).setTouchable(Touchable.disabled);
+                //weaponButtons.get(i).setTouchable(Touchable.disabled);
             }
             i++;
         }
@@ -535,6 +536,7 @@ public class CombatScreen extends BaseScreen {
                                }
                            });
     }
+    
 
     /**
      * Draws buttons for Each weapon the user has which can be pressed to fire
@@ -551,7 +553,9 @@ public class CombatScreen extends BaseScreen {
         weaponButtonStyle.down = weaponButtonSkin.getDrawable("weaponButtonDown");
         weaponButtonStyle.checked = weaponButtonSkin.getDrawable("weaponButtonChecked");
         weaponButtonStyle.font = new BitmapFont();
-
+        
+        final TextButton fire = new TextButton("choose a weapon", weaponButtonStyle);
+        
         final List<Weapon> playerWeapons = playerShip.getWeapons();
 
         weaponButtonGroup.setMaxCheckCount(1);
@@ -561,7 +565,7 @@ public class CombatScreen extends BaseScreen {
             attackTable.add(cooldownList.get(i));
         }
         attackTable.row();
-
+        
         int i = 0;
         while (i < 4) {
             final int j = i;
@@ -577,6 +581,15 @@ public class CombatScreen extends BaseScreen {
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     try {
                         weaponSelected = playerWeapons.get(j);
+                        if (weaponSelected.getCrewCost() >= game.getCrew()) {
+                        	fire.setText("Not enough crew");
+                        	weaponSelected = null;
+                        }
+                        else if (weaponSelected.getCurrentCooldown()!= 0) {
+                        	fire.setText("Pass");
+                        }else {
+                        	fire.setText("Fire. Crew Cost:"+weaponSelected.getCrewCost());
+                        }
                     } catch (IndexOutOfBoundsException e) {
                     }
                     return true;
@@ -590,9 +603,10 @@ public class CombatScreen extends BaseScreen {
 
 
 
-        final TextButton fire = new TextButton("Fire", weaponButtonStyle);
+        
         attackTable.add(fire).padLeft(fire.getPrefWidth());
-
+        
+        
 
         fire.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -609,6 +623,7 @@ public class CombatScreen extends BaseScreen {
                         //Runs the players Combat Loop
                         combatManager.combatLoop(combatPlayer, combatEnemy, roomSelected, weaponSelected);
                         playSound(cannon_1);
+                        game.setCrew(game.getCrew()- weaponSelected.getCrewCost());
                         //Displays if the Player Hit or Missed
                         if (combatManager.getShotHit()){
                             Gdx.app.log("Combat", "Attack Hit");
@@ -654,12 +669,69 @@ public class CombatScreen extends BaseScreen {
                     hitFeedbackTime = 0;
 
                 }
+                fire.setText("choose a weapon");
                 return true;
             }
         });
 
         fire.setChecked(false);
+        
+        
+        
+		
+        final TextButton flee = new TextButton("Flee",weaponButtonStyle);
+        attackTable.add(flee);
+        
+        flee.addListener(new InputListener() { public boolean touchDown(InputEvent
+        		event, float x, float y, int pointer, int button) {
+        	
+        	double fleecheck = Math.random();
+        	if (fleecheck > 0.1 ) {
+        		gameOver = true;
+                gameWon = false;
+        		
+        	}else {
+        		//Need to Display flee failed here not finished.
+        		
+	        	//Runs enemy Combat Loop
+	            if (combatEnemy.hasWepaonsReady()){
+	                combatManager.enemyCombatLoop(combatEnemy, combatPlayer);
+	                //Displays if Enemy Hit or Missed
+	                if (combatManager.getShotHit()){
+	                    hitFeedbackTime = 0;
+	                    enemyHit.setVisible(true);
+	                } else {
+	                    hitFeedbackTime = 0;
+	                    enemyMissed.setVisible(true);
+	                }
+	            } else {
+	                for (Weapon weapon : enemyShip.getWeapons()) {
+	                    weapon.decrementCooldown(COOLDOWN_TICKS_PER_TURN);
+	                }
+	                enemyShip.combatRepair();
+	            }
+	
+	            if (playerShip.getHullHP() <= 0) {
+	                gameOver = true;
+	                gameWon = false;
+	            } else if (enemyShip.getHullHP() <= 0) {
+	                gameOver = true;
+	                gameWon = true;
+	            }
+	            hitFeedbackTime = 0;
+        	} 
+        	
+        	return true; 
+        	}
+        });
+		  
+		  
+		  
+		  
+        flee.setChecked(false);
+		 
         weaponButtonGroup.uncheckAll();
+        
     }
 
     private ArrayList<Label> cooldownList;

@@ -3,13 +3,17 @@ package display;
 import banks.CoordBank;
 import base.BaseScreen;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
@@ -43,6 +47,7 @@ public class DepartmentScreen extends BaseScreen {
     private Table resource2 = new Table();
     private Table resource3 = new Table();
 
+    private Stage mainStage = new Stage();
     /**
      * Sets up department to retrieve values
      */
@@ -64,14 +69,13 @@ public class DepartmentScreen extends BaseScreen {
         musicSetup("heroic-age.mp3", true);
 
         this.playerShip = game.getPlayerShip();
-
+        
         df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.CEILING);
 
         buttonAtlas = new TextureAtlas("buttonSpriteSheet.txt");
         skin.addRegions(buttonAtlas);
         buttonTable = new Table();
-
 
         textButtonStyle.font = skin.getFont("default-font");
         textButtonStyle.up = skin.getDrawable("buttonUp");
@@ -82,6 +86,7 @@ public class DepartmentScreen extends BaseScreen {
         weaponBuyTableList = new ArrayList<Table>();
         weaponSellTableList = new ArrayList<Table>();
         roomTableList = new ArrayList<Table>();
+       
 
         for (int i = 0; i <= 3; i++){
             weaponBuyTableList.add(new Table());
@@ -106,11 +111,13 @@ public class DepartmentScreen extends BaseScreen {
         buttonTable.setFillParent(true);
         buttonTable.align(Align.center);
         buttonTable.setDebug(false);
-
+        
         buttonToMenu();
         drawShop();
 
     }
+    
+    
 //TODO Prevent shop being able to sell more than 4 items/player being able to sell all items
     private void drawShop(){
         for (int i = 0; i <= 3; i++){
@@ -142,19 +149,21 @@ public class DepartmentScreen extends BaseScreen {
 
     @Override
     public void update(float delta){
+    	
         Gdx.input.setInputProcessor(mainStage);
-
+        
+        mainStage.draw();
+        
         batch.begin();
-
+        
         drawFriendlyShip();
-
         drawHealthBar();
         drawIndicators();
-
-
+        
+        
         batch.end();
-
-        mainStage.draw();
+        
+        
     }
 
     @Override
@@ -165,11 +174,12 @@ public class DepartmentScreen extends BaseScreen {
         buttonAtlas = new TextureAtlas("buttonSpriteSheet.txt");
         skin.addRegions(buttonAtlas);
 
-//        textButtonStyle.fontColor = Color.BLACK;
+//      textButtonStyle.fontColor = Color.BLACK;
         textButtonStyle.up = skin.getDrawable("buttonUp");
         textButtonStyle.down = skin.getDrawable("buttonDown");
 
     }
+    
 
     // THIS IS NEW
     private Texture background;
@@ -211,6 +221,7 @@ public class DepartmentScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
+
     }
 
     @Override
@@ -244,6 +255,7 @@ public class DepartmentScreen extends BaseScreen {
      * @param max
      * @return returns random int between 0 and max - 1
      */
+    @Deprecated
     public int pickRandom(int max) {
         Random rand = new Random();
         return rand.nextInt(max);
@@ -328,10 +340,10 @@ public class DepartmentScreen extends BaseScreen {
     public void drawIndicators(){
         indicatorFont.setColor(1,1,1,1);
 
-        indicatorFont.draw(batch, "Score: " + game.getPoints(), 25, 965);
+        indicatorFont.draw(batch, "Points: " + game.getPoints(), 25, 965);
         indicatorFont.draw(batch, "Gold: " + game.getGold(), 110, 965);
-        indicatorFont.draw(batch, "Food: " + game.getFood(), 195, 965);
-        indicatorFont.draw(batch, "Crew: " + playerShip.getCrew(), 280, 965);
+        indicatorFont.draw(batch, "Crew: " + game.getCrew(), 195, 965);
+        indicatorFont.draw(batch, "Autorepair: " + df.format(playerShip.calculateRepair()) + "%",280,965);
     }
 
     /**
@@ -341,6 +353,7 @@ public class DepartmentScreen extends BaseScreen {
         backButton.setPosition(880, 980);
         backButton.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y) {
+            	getMusic().stop();
                 Gdx.app.debug("Department DEBUG", "Button Pressed");
                 changeScreen(new SailingScreen(game, false));
             }
@@ -543,12 +556,12 @@ public class DepartmentScreen extends BaseScreen {
      */
     public void drawBuyResourceFeatures(){
         buyResourceButtonList.add(new TextButton("Buy (" + CREW_COST + "g)", textButtonStyle));
-        resource1.add(new Label("Crew", skin));
+        resource1.add(new Label("Battle Repair", skin));
         resource1.row();
         resource1.add(buyResourceButtonList.get(0));
 
         buyResourceButtonList.add(new TextButton("Buy (" + FOOD_COST + "g)", textButtonStyle));
-        resource2.add(new Label("Food", skin));
+        resource2.add(new Label("Crew", skin));
         resource2.row();
         resource2.add(buyResourceButtonList.get(1));
 

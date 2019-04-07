@@ -32,11 +32,11 @@ public class GameManager extends Game implements java.io.Serializable {
 
 
     /**
-     * A resource tied to crew and travelling. As you travel you use up food. The more crew you have, the faster you use
-     * it. This stops you ending up with a massive crew and means that you cant stay at sea for ever, progressing the
-     * game.
+     * Changed.
+     * A resource tied to boarding. Food was originally not used at all so this has been replaced by crew for boarding.
+     * Old crew will be changed to auto-repair.
      */
-    private int food;
+    private int crew;
     /**
      * Points are accumulated by killing ships etc. They go toward recording the high scores.
      */
@@ -50,6 +50,7 @@ public class GameManager extends Game implements java.io.Serializable {
      * The difficulty that the player is playing on.
      */
     private Difficulty difficulty;
+    
 
     public void setPlayerShip(Ship playerShip) {
         this.playerShip = playerShip;
@@ -59,8 +60,8 @@ public class GameManager extends Game implements java.io.Serializable {
         this.gold = gold;
     }
 
-    public void setFood(int food) {
-        this.food = food;
+    public void setCrew(int crew) {
+        this.crew = crew;
     }
 
     public void setPoints(int points) {
@@ -83,7 +84,7 @@ public class GameManager extends Game implements java.io.Serializable {
     public void setCollegeShip(Ship collegeShip) {
         this.collegeShip = collegeShip;
     }
-
+    
     private CombatPlayer combatPlayer = new CombatPlayer(playerShip);
 
     private Ship enemyShip = STARTER_SHIP.getShip();
@@ -169,18 +170,20 @@ public class GameManager extends Game implements java.io.Serializable {
         return true;
     }
 
-    public int getFood() {
-        return food;
+    public int getCrew() {
+        return crew;
     }
 
-    public void addFood(int amount) {
-        this.food += amount;
-    }
+	
+	public void addCrew(int amount) { 
+		this.crew += amount; 
+	}
+	 
 
-    public void deductFood(int amount) {
-        food -= amount;
-        if (food < 0) {
-            food = 0;
+    public void deductCrew(int amount) {
+        crew -= amount;
+        if (crew < 0) {
+            crew = 0;
         }
     }
 
@@ -252,7 +255,7 @@ public class GameManager extends Game implements java.io.Serializable {
         this.playerName = playerName;
         this.difficulty = difficulty;
         this.gold = STARTING_GOLD;
-        this.food = STARTING_FOOD;
+        this.crew = STARTING_FOOD;
         this.points = 0;
         this.masterVolume = 0.1f;
         this.soundVolume = 0.5f;
@@ -261,6 +264,22 @@ public class GameManager extends Game implements java.io.Serializable {
         this.ComputerScience = new Department(COMP_SCI_WEPS.getWeaponList(), COMP_SCI_UPGRADES.getRoomUpgradeList(), this);
         this.LawAndManagement = new Department(LMB_WEPS.getWeaponList(), LMB_UPGRADES.getRoomUpgradeList(), this);
         this.Physics = new Department(PHYS_WEPS.getWeaponList(), PHYS_UPGRADES.getRoomUpgradeList(), this);
+    }
+    
+    public void resetgamestate() {
+    	this.gold = STARTING_GOLD;
+    	this.crew = STARTING_FOOD;
+    	this.points = 0;
+    	this.masterVolume = 0.1f;
+        this.soundVolume = 0.5f;
+        this.musicVolume = 0.5f;
+        
+        this.ComputerScience = new Department(COMP_SCI_WEPS.getWeaponList(), COMP_SCI_UPGRADES.getRoomUpgradeList(), this);
+        this.LawAndManagement = new Department(LMB_WEPS.getWeaponList(), LMB_UPGRADES.getRoomUpgradeList(), this);
+        this.Physics = new Department(PHYS_WEPS.getWeaponList(), PHYS_UPGRADES.getRoomUpgradeList(), this);
+        
+        this.playerShip = STARTER_SHIP.getShip();
+        this.combatPlayer = new CombatPlayer(playerShip);
     }
 
 

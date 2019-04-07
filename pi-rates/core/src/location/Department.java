@@ -1,6 +1,8 @@
 package location;
 
 import com.badlogic.gdx.Gdx;
+
+import combat.actors.CombatPlayer;
 import combat.items.RoomUpgrade;
 import combat.items.Weapon;
 import game_manager.GameManager;
@@ -69,7 +71,7 @@ public class Department implements java.io.Serializable {
         } else {
             gameManager.getPlayerShip().addWeapon(weapon);
             weaponStock.remove(weapon);
-            gameManager.deductGold(weapon.getCost());
+            gameManager.payGold(weapon.getCost());
         }
     }
 
@@ -85,7 +87,7 @@ public class Department implements java.io.Serializable {
         } else {
             gameManager.getPlayerShip().addUpgrade(upgrade);
             upgradeStock.remove(upgrade);
-            gameManager.deductGold(upgrade.getCost());
+            gameManager.payGold(upgrade.getCost());
         }
     }
 
@@ -107,8 +109,8 @@ public class Department implements java.io.Serializable {
             if (price * amount > gameManager.getGold()) {
                 throw new IllegalStateException("Not enough gold");
             } else {
-                gameManager.addFood(amount);
-                gameManager.deductGold(price * amount);
+                gameManager.addCrew(amount);
+                gameManager.payGold(price * amount);
             }
         }
         if (resource == Resource.CREW) {
@@ -116,15 +118,16 @@ public class Department implements java.io.Serializable {
                 throw new IllegalStateException("Not enough gold");
             } else {
                 gameManager.getPlayerShip().addCrew(amount);
-                gameManager.deductGold(price * amount);
+                gameManager.payGold(price * amount);
             }
         }
         if (resource == Resource.REPAIR) {
-            if (price * amount > gameManager.getGold()) {
+            if (price > gameManager.getGold()) {
                 throw new IllegalStateException("Not enough gold");
             } else {
-                gameManager.getPlayerShip().repairHull(amount);
-                gameManager.deductGold(price * amount);
+                gameManager.getPlayerShip().repairHull(gameManager.getPlayerShip().getBaseHullHP());
+                gameManager.setCombatPlayer(new CombatPlayer(gameManager.getPlayerShip()));
+                gameManager.payGold(amount);
             }
         }
     }
