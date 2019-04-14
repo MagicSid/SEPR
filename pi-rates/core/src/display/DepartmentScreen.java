@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import combat.items.RoomUpgrade;
 import combat.items.Weapon;
+import combat.ship.RoomFunction;
 import combat.ship.Ship;
 import game_manager.GameManager;
 import location.Department;
@@ -34,6 +36,11 @@ import static banks.RoomUpgradeSetBank.COMP_SCI_UPGRADES;
 import static banks.RoomUpgradeSetBank.LMB_UPGRADES;
 import static banks.WeaponSetBank.COMP_SCI_WEPS;
 import static banks.WeaponSetBank.LMB_WEPS;
+import static combat.ship.RoomFunction.CREW_QUARTERS;
+import static combat.ship.RoomFunction.CROWS_NEST;
+import static combat.ship.RoomFunction.GUN_DECK;
+import static combat.ship.RoomFunction.HELM;
+import static combat.ship.RoomFunction.NON_FUNCTIONAL;
 import static other.Constants.*;
 
 public class DepartmentScreen extends BaseScreen {
@@ -58,6 +65,9 @@ public class DepartmentScreen extends BaseScreen {
      */
     private Ship playerShip;
 
+    private Table playerShipTable;
+    
+    
     /**
      * Constructor for DepartmentScreen requiring game to switch screen
      */
@@ -69,6 +79,10 @@ public class DepartmentScreen extends BaseScreen {
         musicSetup("heroic-age.mp3", true);
 
         this.playerShip = game.getPlayerShip();
+        
+        this.playerShipTable = new Table();
+        playerShipTable.padTop(70);
+        playerShipTable.padLeft(60);
         
         df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.CEILING);
@@ -83,6 +97,8 @@ public class DepartmentScreen extends BaseScreen {
 
         setUpTextures();
 
+        drawFriendlyShip();
+        
         weaponBuyTableList = new ArrayList<Table>();
         weaponSellTableList = new ArrayList<Table>();
         roomTableList = new ArrayList<Table>();
@@ -111,6 +127,11 @@ public class DepartmentScreen extends BaseScreen {
         buttonTable.setFillParent(true);
         buttonTable.align(Align.center);
         buttonTable.setDebug(false);
+        
+        mainStage.addActor(playerShipTable);
+        
+        playerShipTable.setFillParent(true);
+        playerShipTable.align(Align.topLeft);
         
         buttonToMenu();
         drawShop();
@@ -156,7 +177,6 @@ public class DepartmentScreen extends BaseScreen {
         
         batch.begin();
         
-        drawFriendlyShip();
         drawHealthBar();
         drawIndicators();
         
@@ -227,6 +247,7 @@ public class DepartmentScreen extends BaseScreen {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
+        mainStage.getViewport().update(width,height,true);
     }
 
     @Override
@@ -271,43 +292,117 @@ public class DepartmentScreen extends BaseScreen {
     }
 
     /**
-     * Draws the friendly ship from room textures and constant coordinates
+     * Draws the friendly ship from room textures and constant coordinates old
      */
-    public void drawFriendlyShip(){
-        Sprite friendlyCrewQuaters = roomSpriteAtlas.createSprite("crewQuaters");
-        friendlyCrewQuaters.setPosition(CoordBank.FRIENDLY_CREWQUATERS.getX(),CoordBank.FRIENDLY_CREWQUATERS.getY());
+	/*
+	 * public void drawFriendlyShip(){ Sprite friendlyCrewQuaters =
+	 * roomSpriteAtlas.createSprite("crewQuaters");
+	 * friendlyCrewQuaters.setPosition(CoordBank.FRIENDLY_CREWQUATERS.getX(),
+	 * CoordBank.FRIENDLY_CREWQUATERS.getY());
+	 * 
+	 * Sprite friendlyEmptyRoom1 = roomSpriteAtlas.createSprite("EmptyRoom");
+	 * friendlyEmptyRoom1.setPosition(CoordBank.FRIENDLY_EMPTYROOM1.getX(),CoordBank
+	 * .FRIENDLY_EMPTYROOM1.getY());
+	 * 
+	 * Sprite friendlyCrowsNest = roomSpriteAtlas.createSprite("crowsNest");
+	 * friendlyCrowsNest.setPosition(CoordBank.FRIENDLY_CROWSNEST.getX(),CoordBank.
+	 * FRIENDLY_CROWSNEST.getY());
+	 * 
+	 * Sprite friendlyGunDeck = roomSpriteAtlas.createSprite("gunDeck");
+	 * friendlyGunDeck.setPosition(CoordBank.FRIENDLY_GUNDECK.getX(),CoordBank.
+	 * FRIENDLY_GUNDECK.getY());
+	 * 
+	 * Sprite friendlyEmptyRoom2 = roomSpriteAtlas.createSprite("EmptyRoom");
+	 * friendlyEmptyRoom2.setPosition(CoordBank.FRIENDLY_EMPTYROOM2.getX(),CoordBank
+	 * .FRIENDLY_EMPTYROOM2.getY());
+	 * 
+	 * Sprite friendlyHelm = roomSpriteAtlas.createSprite("helm");
+	 * friendlyHelm.setPosition(CoordBank.FRIENDLY_HELM.getX(),CoordBank.
+	 * FRIENDLY_HELM.getY());
+	 * 
+	 * Sprite friendlyEmptyRoom3 = roomSpriteAtlas.createSprite("EmptyRoom");
+	 * friendlyEmptyRoom3.setPosition(CoordBank.FRIENDLY_EMPTYROOM3.getX(),CoordBank
+	 * .FRIENDLY_EMPTYROOM3.getY());
+	 * 
+	 * Sprite friendlyEmptyRoom4 = roomSpriteAtlas.createSprite("EmptyRoom");
+	 * friendlyEmptyRoom4.setPosition(CoordBank.FRIENDLY_EMPTYROOM4.getX(),CoordBank
+	 * .FRIENDLY_EMPTYROOM4.getY());
+	 * 
+	 * 
+	 * 
+	 * friendlyCrewQuaters.draw(batch); friendlyCrowsNest.draw(batch);
+	 * friendlyGunDeck.draw(batch); friendlyHelm.draw(batch);
+	 * friendlyEmptyRoom1.draw(batch); friendlyEmptyRoom2.draw(batch);
+	 * friendlyEmptyRoom3.draw(batch); friendlyEmptyRoom4.draw(batch); }
+	 */
+    
+    private Label hpLabelCQ;
+    private Label hpLabelCN;
+    private Label hpLabelGD;
+    private Label hpLabelH;
+    private Label hpLabelE1;
+    private Label hpLabelE2;
+    private Label hpLabelE3;
+    private Label hpLabelE4;
+    
+    private void drawFriendlyShip(){
 
-        Sprite friendlyEmptyRoom1 = roomSpriteAtlas.createSprite("EmptyRoom");
-        friendlyEmptyRoom1.setPosition(CoordBank.FRIENDLY_EMPTYROOM1.getX(),CoordBank.FRIENDLY_EMPTYROOM1.getY());
+        hpLabelCQ = labelMaker(CREW_QUARTERS);
+        hpLabelCN =  labelMaker(CROWS_NEST);
+        hpLabelGD = labelMaker(GUN_DECK);
+        hpLabelH = labelMaker(HELM);
+        hpLabelE1 = labelMaker(NON_FUNCTIONAL);
+        hpLabelE2 = labelMaker(NON_FUNCTIONAL);
+        hpLabelE3 = labelMaker(NON_FUNCTIONAL);
+        hpLabelE4 = labelMaker(NON_FUNCTIONAL);
 
-        Sprite friendlyCrowsNest = roomSpriteAtlas.createSprite("crowsNest");
-        friendlyCrowsNest.setPosition(CoordBank.FRIENDLY_CROWSNEST.getX(),CoordBank.FRIENDLY_CROWSNEST.getY());
 
-        Sprite friendlyGunDeck = roomSpriteAtlas.createSprite("gunDeck");
-        friendlyGunDeck.setPosition(CoordBank.FRIENDLY_GUNDECK.getX(),CoordBank.FRIENDLY_GUNDECK.getY());
+        Stack groupCQ = roomSetup("crewQuaters", hpLabelCQ);
+        Stack groupE1 = roomSetup("EmptyRoom", hpLabelE1);
+        Stack groupCN = roomSetup("crowsNest", hpLabelCN);
+        Stack groupGD = roomSetup("gunDeck", hpLabelGD);
+        Stack groupE2 = roomSetup("EmptyRoom", hpLabelE2);
+        Stack groupH = roomSetup("helm", hpLabelH);
+        Stack groupE3 = roomSetup("EmptyRoom", hpLabelE3);
+        Stack groupE4 = roomSetup("EmptyRoom", hpLabelE4);
 
-        Sprite friendlyEmptyRoom2 = roomSpriteAtlas.createSprite("EmptyRoom");
-        friendlyEmptyRoom2.setPosition(CoordBank.FRIENDLY_EMPTYROOM2.getX(),CoordBank.FRIENDLY_EMPTYROOM2.getY());
-
-        Sprite friendlyHelm = roomSpriteAtlas.createSprite("helm");
-        friendlyHelm.setPosition(CoordBank.FRIENDLY_HELM.getX(),CoordBank.FRIENDLY_HELM.getY());
-
-        Sprite friendlyEmptyRoom3 = roomSpriteAtlas.createSprite("EmptyRoom");
-        friendlyEmptyRoom3.setPosition(CoordBank.FRIENDLY_EMPTYROOM3.getX(),CoordBank.FRIENDLY_EMPTYROOM3.getY());
-
-        Sprite friendlyEmptyRoom4 = roomSpriteAtlas.createSprite("EmptyRoom");
-        friendlyEmptyRoom4.setPosition(CoordBank.FRIENDLY_EMPTYROOM4.getX(),CoordBank.FRIENDLY_EMPTYROOM4.getY());
-
-        friendlyCrewQuaters.draw(batch);
-        friendlyCrowsNest.draw(batch);
-        friendlyGunDeck.draw(batch);
-        friendlyHelm.draw(batch);
-        friendlyEmptyRoom1.draw(batch);
-        friendlyEmptyRoom2.draw(batch);
-        friendlyEmptyRoom3.draw(batch);
-        friendlyEmptyRoom4.draw(batch);
+        shipTableSetup(playerShipTable, groupE1, groupE2, groupE3, groupH, groupCN, groupGD, groupCQ, groupE4);
     }
 
+    private Label labelMaker(RoomFunction room){
+        return new Label("HP:" + playerShip.getRoom(room).getHp(), skin);
+    }
+
+    private Stack roomSetup(String roomName, Label label){
+        Stack group = new Stack();
+        group.addActor(new Image(roomSpriteAtlas.findRegion(roomName)));
+        label.setAlignment(Align.bottomLeft);
+        group.addActor(label);
+        return group;
+    }
+    
+    private void shipTableSetup(Table table, Actor a1, Actor a2, Actor a3, Actor a4,
+            Actor a5, Actor a6, Actor a7, Actor a8){
+		addTwoActors(table, a1, a2);
+		addTwoActors(table, a3, a4);
+		addTwoActors(table, a5, a6);
+		addTwoActors(table, a7, a8);
+	
+	}
+
+	/**
+	* Method reduces repeated code
+	* @param table
+	* @param a1
+	* @param a2
+	*/
+	private void addTwoActors(Table table, Actor a1, Actor a2) {
+		table.add(a1);
+		table.add(a2);
+		table.row();
+	}
+
+    
     /**
      * Assigns a random department to be used
      * @param randInt
