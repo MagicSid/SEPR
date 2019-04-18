@@ -173,7 +173,6 @@ public class DepartmentScreen extends BaseScreen {
     public void update(float delta){
         Gdx.input.setInputProcessor(mainStage);
         
-        mainStage.draw();
         batch.begin();
         
         updateIndicators();

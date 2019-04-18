@@ -275,14 +275,11 @@ public class CombatScreen extends BaseScreen {
             } else if(playerShip.getHullHP() <= 0) {
                 youLose.setVisible(true);
                 try {
-					TimeUnit.SECONDS.sleep(1);
-				} catch (InterruptedException e) {
-					getMusic().stop();
-					youLose.setVisible(false);
-					// change screen to lose screen HERE
-				}
+					TimeUnit.SECONDS.sleep(3);
+				} catch (InterruptedException e) { }
+                getMusic().stop();
+                changeScreen(new GameOverScreen(game));
             }
-
             if (colleges.isEmpty()) {
             	getMusic().stop();
                 changeScreen(new VictoryScreen(game));

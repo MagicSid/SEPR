@@ -203,15 +203,20 @@ public abstract class BaseScreen implements Screen {
         masterLabel.setText((int)(game.getMasterValue() * 100) + " / " + 100);
         soundLabel.setText((int)(game.getSoundValue() * 100) + " / " + 100);
         musicLabel.setText((int)(game.getMusicValue() * 100) + " / " + 100);
-
-        music.setVolume(game.getMusicVolume());
+        
+        try {
+        	getMusic().setVolume(game.getMusicVolume());
+        } catch(Exception e){ }
+        
     }
 
     /**
      * Setting a new screen after calling the current one's dispose method
      */
     public void changeScreen(BaseScreen screen) {
+    	try {
         getMusic().stop();
+    	} catch(Exception e) { }
         dispose();
         game.setScreen(screen);
     }
@@ -256,8 +261,10 @@ public abstract class BaseScreen implements Screen {
         this.uiStage.dispose();
         this.mainStage.dispose();
         this.pauseStage.dispose();
-        this.getMusic().stop();
-        this.getMusic().dispose();
+        try {
+	        this.getMusic().stop();
+	        this.getMusic().dispose();
+        } catch(Exception e) {}
     }
 
     /**
