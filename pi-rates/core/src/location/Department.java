@@ -97,32 +97,29 @@ public class Department implements java.io.Serializable {
      * @param amount The amount of resources you want to buy
      */
     public void buyResource(Resource resource, int amount) {
-        int price;
         if (!resourceStock.keySet().contains(resource)) {
             throw new IllegalArgumentException("Resource not valid");
         } else if (amount <= 0) {
             throw new IllegalArgumentException("Not allowed");
-        } else {
-            price = resourceStock.get(resource);
-        }
+        } 
         if (resource == Resource.FOOD) {
-            if (price * amount > gameManager.getGold()) {
+            if ( amount > gameManager.getGold()) {
                 throw new IllegalStateException("Not enough gold");
             } else {
                 gameManager.addCrew(amount);
-                gameManager.payGold(price * amount);
+                gameManager.payGold(amount);
             }
         }
         if (resource == Resource.CREW) {
-            if (price * amount > gameManager.getGold()) {
+            if ( amount > gameManager.getGold()) {
                 throw new IllegalStateException("Not enough gold");
             } else {
                 gameManager.getPlayerShip().addCrew(amount);
-                gameManager.payGold(price * amount);
+                gameManager.payGold(amount);
             }
         }
         if (resource == Resource.REPAIR) {
-            if (price > gameManager.getGold()) {
+            if (amount > gameManager.getGold()) {
                 throw new IllegalStateException("Not enough gold");
             } else {
                 gameManager.getPlayerShip().repairHull(gameManager.getPlayerShip().getBaseHullHP());
@@ -131,6 +128,8 @@ public class Department implements java.io.Serializable {
             }
         }
     }
+    
+    
 
     /**
      * Sells a weapon back to the shop for slightly less than its worth

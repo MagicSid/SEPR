@@ -6,7 +6,7 @@ import combat.ship.RoomFunction;
  * An upgrade that can be bought from departments and
  * applied to a room. It increases the effectiveness of that room in combat.
  */
-public class RoomUpgrade {
+public class RoomUpgrade implements java.io.Serializable{
     /**
      * Name of the item displayed in shops etc.
      */

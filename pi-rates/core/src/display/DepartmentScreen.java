@@ -53,8 +53,9 @@ public class DepartmentScreen extends BaseScreen {
     private Table resource1 = new Table();
     private Table resource2 = new Table();
     private Table resource3 = new Table();
+    
+    private Table exitbuttontable = new Table();
 
-    private Stage mainStage = new Stage();
     /**
      * Sets up department to retrieve values
      */
@@ -96,7 +97,7 @@ public class DepartmentScreen extends BaseScreen {
         textButtonStyle.down = skin.getDrawable("buttonDown");
 
         setUpTextures();
-
+        drawIndicators();
         drawFriendlyShip();
         
         weaponBuyTableList = new ArrayList<Table>();
@@ -155,7 +156,7 @@ public class DepartmentScreen extends BaseScreen {
      * Used to Draw Assets on the Screen
      */
     private SpriteBatch batch = new SpriteBatch();
-
+    		
     /**
      * Used to set values to the same no. decimal places
      */
@@ -170,19 +171,15 @@ public class DepartmentScreen extends BaseScreen {
 
     @Override
     public void update(float delta){
-    	
         Gdx.input.setInputProcessor(mainStage);
         
         mainStage.draw();
-        
         batch.begin();
         
-        drawHealthBar();
-        drawIndicators();
+        updateIndicators();
         
         
         batch.end();
-        
         
     }
 
@@ -241,13 +238,11 @@ public class DepartmentScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
-
     }
 
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        mainStage.getViewport().update(width,height,true);
     }
 
     @Override
@@ -290,51 +285,6 @@ public class DepartmentScreen extends BaseScreen {
         backgroundImage.setSize(viewwidth, viewheight);
         mainStage.addActor(backgroundImage);
     }
-
-    /**
-     * Draws the friendly ship from room textures and constant coordinates old
-     */
-	/*
-	 * public void drawFriendlyShip(){ Sprite friendlyCrewQuaters =
-	 * roomSpriteAtlas.createSprite("crewQuaters");
-	 * friendlyCrewQuaters.setPosition(CoordBank.FRIENDLY_CREWQUATERS.getX(),
-	 * CoordBank.FRIENDLY_CREWQUATERS.getY());
-	 * 
-	 * Sprite friendlyEmptyRoom1 = roomSpriteAtlas.createSprite("EmptyRoom");
-	 * friendlyEmptyRoom1.setPosition(CoordBank.FRIENDLY_EMPTYROOM1.getX(),CoordBank
-	 * .FRIENDLY_EMPTYROOM1.getY());
-	 * 
-	 * Sprite friendlyCrowsNest = roomSpriteAtlas.createSprite("crowsNest");
-	 * friendlyCrowsNest.setPosition(CoordBank.FRIENDLY_CROWSNEST.getX(),CoordBank.
-	 * FRIENDLY_CROWSNEST.getY());
-	 * 
-	 * Sprite friendlyGunDeck = roomSpriteAtlas.createSprite("gunDeck");
-	 * friendlyGunDeck.setPosition(CoordBank.FRIENDLY_GUNDECK.getX(),CoordBank.
-	 * FRIENDLY_GUNDECK.getY());
-	 * 
-	 * Sprite friendlyEmptyRoom2 = roomSpriteAtlas.createSprite("EmptyRoom");
-	 * friendlyEmptyRoom2.setPosition(CoordBank.FRIENDLY_EMPTYROOM2.getX(),CoordBank
-	 * .FRIENDLY_EMPTYROOM2.getY());
-	 * 
-	 * Sprite friendlyHelm = roomSpriteAtlas.createSprite("helm");
-	 * friendlyHelm.setPosition(CoordBank.FRIENDLY_HELM.getX(),CoordBank.
-	 * FRIENDLY_HELM.getY());
-	 * 
-	 * Sprite friendlyEmptyRoom3 = roomSpriteAtlas.createSprite("EmptyRoom");
-	 * friendlyEmptyRoom3.setPosition(CoordBank.FRIENDLY_EMPTYROOM3.getX(),CoordBank
-	 * .FRIENDLY_EMPTYROOM3.getY());
-	 * 
-	 * Sprite friendlyEmptyRoom4 = roomSpriteAtlas.createSprite("EmptyRoom");
-	 * friendlyEmptyRoom4.setPosition(CoordBank.FRIENDLY_EMPTYROOM4.getX(),CoordBank
-	 * .FRIENDLY_EMPTYROOM4.getY());
-	 * 
-	 * 
-	 * 
-	 * friendlyCrewQuaters.draw(batch); friendlyCrowsNest.draw(batch);
-	 * friendlyGunDeck.draw(batch); friendlyHelm.draw(batch);
-	 * friendlyEmptyRoom1.draw(batch); friendlyEmptyRoom2.draw(batch);
-	 * friendlyEmptyRoom3.draw(batch); friendlyEmptyRoom4.draw(batch); }
-	 */
     
     private Label hpLabelCQ;
     private Label hpLabelCN;
@@ -397,7 +347,7 @@ public class DepartmentScreen extends BaseScreen {
 	* @param a2
 	*/
 	private void addTwoActors(Table table, Actor a1, Actor a2) {
-		table.add(a1);
+		table.add(a1).right();
 		table.add(a2);
 		table.row();
 	}
@@ -417,35 +367,51 @@ public class DepartmentScreen extends BaseScreen {
         }
         return null;
     }
-
-    /**
-     * Draws Hp bars for both ships
-     */
-    public void drawHealthBar() {
-        double defaultWidth = 320;
-        int width = (int)(defaultWidth * ((double)playerShip.getHullHP() / (double)playerShip.getBaseHullHP()));
-
-        batch.draw(hpBackground,25, 970, 320, 16);
-        batch.draw(hpBar,25, 970, width, 16);
-    }
-
+    
+    private Label hpLabel;
+    private Label goldLabel;
+    private Label crewLabel;
+    private Label autorepairLabel;
+    
+    
     /**
      * Draws resource indicators for player
      */
-    public void drawIndicators(){
-        indicatorFont.setColor(1,1,1,1);
+    public void drawIndicators() {
+    	hpLabel = new Label("Hp:", skin);
+    	playerShipTable.add(hpLabel).colspan(2);
+    	playerShipTable.row();
+    	goldLabel = new Label("Gold:", skin);
+    	playerShipTable.add(goldLabel).colspan(2);
+    	playerShipTable.row();
+    	crewLabel = new Label("Crew:", skin);
+    	playerShipTable.add(crewLabel).colspan(2);
+    	playerShipTable.row();
+    	autorepairLabel = new Label("Autorepair:", skin);
+    	playerShipTable.add(autorepairLabel).colspan(2);
+    	playerShipTable.row();
+    	
+    }
 
-        indicatorFont.draw(batch, "Points: " + game.getPoints(), 25, 965);
-        indicatorFont.draw(batch, "Gold: " + game.getGold(), 110, 965);
-        indicatorFont.draw(batch, "Crew: " + game.getCrew(), 195, 965);
-        indicatorFont.draw(batch, "Autorepair: " + df.format(playerShip.calculateRepair()) + "%",280,965);
+    /**
+     * updates labels of the resource indicators
+     */
+    public void updateIndicators(){
+    	
+    	hpLabel.setText("Hp: "+playerShip.getHullHP()+"/"+playerShip.getBaseHullHP());
+    	goldLabel.setText("Gold: "+game.getGold());
+    	crewLabel.setText("Crew: "+game.getCrew());
+    	autorepairLabel.setText("Room repair: "+df.format(playerShip.calculateRepair()));
+    	
     }
 
     /**
      * Draws the Button returning to menu, taking the style button
      */
     public void buttonToMenu(){
-        backButton.setPosition(880, 980);
+    	exitbuttontable.setFillParent(true);
+        exitbuttontable.align(Align.top);
+        
         backButton.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y) {
             	getMusic().stop();
@@ -453,7 +419,8 @@ public class DepartmentScreen extends BaseScreen {
                 changeScreen(new SailingScreen(game, false));
             }
         });
-        mainStage.addActor(backButton);
+        exitbuttontable.add(backButton).fill();
+        mainStage.addActor(exitbuttontable);
     }
 
     /**
@@ -497,6 +464,7 @@ public class DepartmentScreen extends BaseScreen {
         while (j <= buyWeaponList.size() - 1){
             TextButton textButton = new TextButton("Buy (" + buyWeaponList.get(j).getCost() + "g)", textButtonStyle);
             buyWeaponButtonListener(textButton, buyWeaponList.get(j));
+            
             Gdx.app.log("Weapon Stock", buyWeaponList.get(j).getName() + " " + j);
             weaponBuyTableList.get(j).add(new Label(buyWeaponList.get(j).getName(), skin));
             weaponBuyTableList.get(j).row();
@@ -519,6 +487,7 @@ public class DepartmentScreen extends BaseScreen {
     public void buyWeaponButtonListener(final TextButton textButton, final Weapon weapon) {
         textButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
+            	
                 try {
                     department.buyWeapon(weapon);
                     drawShop();
@@ -651,7 +620,7 @@ public class DepartmentScreen extends BaseScreen {
      */
     public void drawBuyResourceFeatures(){
         buyResourceButtonList.add(new TextButton("Buy (" + CREW_COST + "g)", textButtonStyle));
-        resource1.add(new Label("Battle Repair", skin));
+        resource1.add(new Label("Room Repair", skin));
         resource1.row();
         resource1.add(buyResourceButtonList.get(0));
 
@@ -661,7 +630,7 @@ public class DepartmentScreen extends BaseScreen {
         resource2.add(buyResourceButtonList.get(1));
 
         buyResourceButtonList.add(new TextButton("Buy (" + REPAIR_COST + "g)", textButtonStyle));
-        resource3.add(new Label("Repair", skin));
+        resource3.add(new Label("Hull Repair", skin));
         resource3.row();
         resource3.add(buyResourceButtonList.get(2));
 
@@ -675,7 +644,7 @@ public class DepartmentScreen extends BaseScreen {
         buyResourceButtonList.get(0).addListener(new InputListener() {
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     try {
-                        department.buyResource(Resource.CREW, SHOP_CREW_AMOUNT);
+                        department.buyResource(Resource.CREW, CREW_COST);
                     } catch (IllegalStateException e) {
                     } catch (IllegalArgumentException e) {
                     }
@@ -685,7 +654,7 @@ public class DepartmentScreen extends BaseScreen {
         buyResourceButtonList.get(1).addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 try {
-                    department.buyResource(Resource.FOOD, SHOP_FOOD_AMOUNT);
+                    department.buyResource(Resource.FOOD, FOOD_COST);
                 } catch (IllegalStateException e) {
                 } catch (IllegalArgumentException e) {
                 }
@@ -695,7 +664,7 @@ public class DepartmentScreen extends BaseScreen {
         buyResourceButtonList.get(2).addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 try {
-                    department.buyResource(Resource.REPAIR, SHOP_REPAIR_AMOUNT);
+                    department.buyResource(Resource.REPAIR, REPAIR_COST);
                 } catch (IllegalStateException e) {
                 } catch (IllegalArgumentException e) {
                 }

@@ -79,10 +79,12 @@ public class GameManager extends Game implements java.io.Serializable {
 
     public void setEnemyShip(Ship enemyShip) {
         this.enemyShip = enemyShip;
+        this.combatEnemy = new CombatEnemy(enemyShip);
     }
 
     public void setCollegeShip(Ship collegeShip) {
         this.collegeShip = collegeShip;
+        this.combatCollege= new CombatEnemy(collegeShip);
     }
     
     private CombatPlayer combatPlayer = new CombatPlayer(playerShip);
