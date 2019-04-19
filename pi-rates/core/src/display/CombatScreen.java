@@ -17,6 +17,7 @@ import combat.actors.CombatEnemy;
 import combat.actors.CombatPlayer;
 import combat.items.Weapon;
 import combat.manager.CombatManager;
+import combat.manager.EnemyGenerator;
 import combat.ship.Room;
 import combat.ship.RoomFunction;
 import combat.ship.Ship;
@@ -27,6 +28,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -118,6 +120,7 @@ public class CombatScreen extends BaseScreen {
     private Table playerShipTable;
     private Table enemyShipTable;
     private Table attackTable;
+    private Table enemyWeaponsTable;
     private Label titleLabel;
 
     /**
@@ -130,6 +133,13 @@ public class CombatScreen extends BaseScreen {
         this.college = college;
         playerShip = game.getPlayerShip();
         this.isCollegeBattle = isCollegeBattle;
+        
+        /*
+         * Disable save options during combat to prevent crashes
+         */
+        this.saveButton.setVisible(false);
+        this.mainMenuButton.setVisible(false);
+        
         TextureAtlas buttonAtlas = new TextureAtlas("buttonSpriteSheet.txt");
         skin.addRegions(buttonAtlas);
         textButtonStyle = new TextButton.TextButtonStyle();
@@ -153,13 +163,19 @@ public class CombatScreen extends BaseScreen {
         mainStage.addActor(backgroundImg);
 
         titleLabel = new Label("", skin, "title");
+        
+        if(this.isCollegeBattle) {
+        	setupCollegeShip();
+        }else {
+        	setupEnemyShip();
+        }
 
         drawCollege(college.getName());
 
         setUpTextures();
         groupEnemyBar.addActor(hpEnemyImage);
         groupEnemyBar.addActor(enemyHpBar);
-
+        
         fullTable.add(titleLabel).colspan(2).center();
         fullTable.row().uniformX().width(viewwidth/3);
         fullTable.add(playerHealthTable);
@@ -257,10 +273,14 @@ public class CombatScreen extends BaseScreen {
                     game.addPoints((int) (100 * EASY_SCORE_MULTIPLIER));
                     game.addGold((int) (100 * EASY_SCORE_MULTIPLIER));
                 }
-            } else {
+            } else if(playerShip.getHullHP() <= 0) {
                 youLose.setVisible(true);
+                try {
+					TimeUnit.SECONDS.sleep(3);
+				} catch (InterruptedException e) { }
+                getMusic().stop();
+                changeScreen(new GameOverScreen(game));
             }
-
             if (colleges.isEmpty()) {
             	getMusic().stop();
                 changeScreen(new VictoryScreen(game));
@@ -319,14 +339,6 @@ public class CombatScreen extends BaseScreen {
         cannon_2.dispose();
         cannon_3.dispose();
         batch.dispose();
-    }
-
-    /**
-     * Picks a Random integer
-     */
-    private int pickRandom(int max){
-        Random rand = new Random();
-        return rand.nextInt(max);
     }
 
     /**
@@ -433,7 +445,7 @@ public class CombatScreen extends BaseScreen {
         pointsLabel = new Label("Score: " + game.getPoints() ,skin);
         goldLabel = new Label("Gold: " + game.getGold() ,skin);
         foodLabel = new Label("Crew: " + game.getCrew() ,skin);
-        crewLabel = new Label("Crew: " + playerShip.getAutorepair() ,skin);
+        crewLabel = new Label("Room Repair: " + playerShip.getAutorepair() ,skin);
 
         groupPlayerBar.addActor(hpImage);
         groupPlayerBar.addActor(playerHpBar);
@@ -737,7 +749,7 @@ public class CombatScreen extends BaseScreen {
     private ArrayList<Label> cooldownList;
 
     /**
-     * Draws Text displaying weapon cooldowns to the user
+     * Draws Text displaying weapon cooldowns to the user - could do with some edits
      */
     private void drawWeaponCooldowns() {
         cooldownList = new ArrayList<Label>();
@@ -806,4 +818,40 @@ public class CombatScreen extends BaseScreen {
         button.setVisible(false);
         return button;
     }
+    
+    private void setupCollegeShip() {
+    	EnemyGenerator enemygen = new EnemyGenerator(200,1200);
+    	Ship ship = enemygen.returnship();
+    	this.game.setCollegeShip(ship);
+    	drawEnemyWeapons(ship.getWeapons());
+    }
+    
+    private void setupEnemyShip() {
+    	EnemyGenerator enemygen = new EnemyGenerator(200,725);
+    	Ship ship = enemygen.returnship();
+    	this.game.setEnemyShip(ship);
+    	drawEnemyWeapons(ship.getWeapons());
+    }
+    
+    private void drawEnemyWeapons(List<Weapon> weapons) {
+    	enemyWeaponsTable = new Table();
+    	ListIterator<Weapon> weaponiterator = weapons.listIterator();
+    	
+    	Label weapontitle = new Label("Enemy Weapons",skin);
+    	enemyWeaponsTable.add(weapontitle).align(Align.left);
+    	enemyWeaponsTable.row();
+    	
+    	while(weaponiterator.hasNext()) {
+    		Label weaponname = new Label(weaponiterator.next().getName(),skin);
+    		enemyWeaponsTable.add(weaponname).align(Align.left);
+    		enemyWeaponsTable.row();
+    	}
+    	
+    	mainStage.addActor(enemyWeaponsTable);
+    	
+    	enemyWeaponsTable.setFillParent(true);
+    	enemyWeaponsTable.align(Align.right).padRight(300);
+    	enemyWeaponsTable.padBottom(200);
+    }
+    
 }

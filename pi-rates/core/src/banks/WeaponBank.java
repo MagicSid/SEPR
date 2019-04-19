@@ -45,6 +45,9 @@ public enum WeaponBank {
     WATER("Water Cannon", DEFAULT_WEAPON_COST / 3, DEFAULT_WEAPON_DAMAGE / 3, DEFAULT_WEAPON_COOLDOWN / 3,
             DEFAULT_WEAPON_CRIT_CHANCE, DEFAULT_WEAPON_HIT_CHANCE),
 	
+    //Always add new weapons before this point. Random enemy generator should not give enemies access to the boarding harpoon since it's
+    // a player exclusive item.
+    
 	BOARDING("Boarding Harpoon",DEFAULT_WEAPON_COST/4, DEFAULT_WEAPON_DAMAGE*4,DEFAULT_WEAPON_COOLDOWN / 3,
 			0.0, 1.0,25);
 

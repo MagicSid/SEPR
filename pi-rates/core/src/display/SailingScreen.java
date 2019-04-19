@@ -84,9 +84,11 @@ public class SailingScreen extends BaseScreen {
      */
     private Label pointsLabel;
     private Label goldLabel;
+    private Label collegesaliveLabel;
     private Label mapMessage;
     private Label hintMessage;
-
+    
+    
     /**
      * Timer used for adding point through passage of time
      */
@@ -107,18 +109,31 @@ public class SailingScreen extends BaseScreen {
         Table uiTable = new Table();
 
         Label pointsTextLabel = new Label("Points: ", skin, "default_black");
+        pointsTextLabel.setAlignment(Align.left);
         pointsLabel = new Label(Integer.toString(game.getPoints()), skin, "default_black");
         pointsLabel.setAlignment(Align.left);
 
         Label goldTextLabel = new Label("Gold:", skin, "default_black");
         goldLabel = new Label(Integer.toString(game.getGold()), skin, "default_black");
         goldLabel.setAlignment(Align.left);
-
-        uiTable.add(pointsTextLabel);
-        uiTable.add(pointsLabel).width(pointsTextLabel.getWidth());
+        
+        Label collegeTextLabel = new Label("Defeat all colleges to win!",skin, "default_black");
+        
+        Label collegesaliveTextLabel = new Label("Colleges left to defeat:",skin,"default_black");
+        collegesaliveLabel = new Label("", skin, "default_black");
+        collegesaliveLabel.setAlignment(Align.left);
+        collegesaliveLabel.setWrap(true);
+        
+        uiTable.add(pointsTextLabel).fill();
+        uiTable.add(pointsLabel).width(pointsTextLabel.getWidth() + 70);
         uiTable.row();
         uiTable.add(goldTextLabel).fill();
         uiTable.add(goldLabel).fill();
+        uiTable.row();
+        uiTable.add(collegeTextLabel).fill();
+        uiTable.row();
+        uiTable.add(collegesaliveTextLabel).fill();
+        uiTable.add(collegesaliveLabel).fill();
 
         uiTable.align(Align.topRight);
         uiTable.setFillParent(true);
@@ -235,10 +250,16 @@ public class SailingScreen extends BaseScreen {
         removeList.clear();
         goldLabel.setText(Integer.toString(game.getGold()));
         this.playerShip.playerMove(delta);
-
+        String collegesalive = "";
         Boolean x = false;
         for (BaseActor region : regionList) {
             String name = region.getName();
+            
+            if(region.getCollege().isBossAlive()) {
+            	collegesalive += region.getCollege().getName() + " "; 
+            }
+            collegesalive.substring(0,collegesalive.length() -2);
+            
             if (playerShip.overlaps(region, false)) {
                 x = true;
 
@@ -258,7 +279,9 @@ public class SailingScreen extends BaseScreen {
                 }
             }
         }
-
+        
+        collegesaliveLabel.setText(collegesalive);
+        
         if (!x) {
             mapMessage.setText("Neutral Territory");
 //            Gdx.app.debug("Sailing Location","Neutral Territory");
@@ -378,7 +401,7 @@ public class SailingScreen extends BaseScreen {
             update(delta);
 
             if (!playerShip.isAnchor()){
-                playerShip.addAccelerationAS(playerShip.getRotation(), 10000);
+                playerShip.setAccelerationAS(playerShip.getRotation(),playerShip.getSpeed()+500);
             } else{
                 playerShip.setAccelerationXY(0,0);
                 playerShip.setDeceleration(100);

@@ -67,6 +67,8 @@ public abstract class BaseScreen implements Screen {
     private Label musicLabel;
     protected Preferences prefs;
 
+    protected TextButton saveButton;
+    protected TextButton mainMenuButton;
     /**
      * A music object to hold the music for the game
      */
@@ -99,7 +101,7 @@ public abstract class BaseScreen implements Screen {
         soundLabel = new Label((int)(game.getSoundValue() * 100) + " / " + 100, skin);
         musicLabel = new Label((int)(game.getMusicValue() * 100) + " / " + 100, skin);
 
-        TextButton saveButton = new TextButton("Save Game", skin);
+        saveButton = new TextButton("Save Game", skin);
         saveButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y){
                 Gdx.app.debug("Save DEBUG", "Save button pressed");
@@ -107,7 +109,7 @@ public abstract class BaseScreen implements Screen {
             }
         });
 
-        TextButton mainMenuButton = new TextButton("Save and Return To Menu", skin);
+        mainMenuButton = new TextButton("Save and Return To Menu", skin);
         mainMenuButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y){
                 Gdx.app.debug("SaveMenu DEBUG", "SaveMenu button pressed");
@@ -201,15 +203,20 @@ public abstract class BaseScreen implements Screen {
         masterLabel.setText((int)(game.getMasterValue() * 100) + " / " + 100);
         soundLabel.setText((int)(game.getSoundValue() * 100) + " / " + 100);
         musicLabel.setText((int)(game.getMusicValue() * 100) + " / " + 100);
-
-        music.setVolume(game.getMusicVolume());
+        
+        try {
+        	getMusic().setVolume(game.getMusicVolume());
+        } catch(Exception e){ }
+        
     }
 
     /**
      * Setting a new screen after calling the current one's dispose method
      */
     public void changeScreen(BaseScreen screen) {
+    	try {
         getMusic().stop();
+    	} catch(Exception e) { }
         dispose();
         game.setScreen(screen);
     }
@@ -254,8 +261,10 @@ public abstract class BaseScreen implements Screen {
         this.uiStage.dispose();
         this.mainStage.dispose();
         this.pauseStage.dispose();
-        this.getMusic().stop();
-        this.getMusic().dispose();
+        try {
+	        this.getMusic().stop();
+	        this.getMusic().dispose();
+        } catch(Exception e) {}
     }
 
     /**

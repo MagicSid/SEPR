@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import combat.items.RoomUpgrade;
 import combat.items.Weapon;
+import combat.ship.RoomFunction;
 import combat.ship.Ship;
 import game_manager.GameManager;
 import location.Department;
@@ -34,6 +36,11 @@ import static banks.RoomUpgradeSetBank.COMP_SCI_UPGRADES;
 import static banks.RoomUpgradeSetBank.LMB_UPGRADES;
 import static banks.WeaponSetBank.COMP_SCI_WEPS;
 import static banks.WeaponSetBank.LMB_WEPS;
+import static combat.ship.RoomFunction.CREW_QUARTERS;
+import static combat.ship.RoomFunction.CROWS_NEST;
+import static combat.ship.RoomFunction.GUN_DECK;
+import static combat.ship.RoomFunction.HELM;
+import static combat.ship.RoomFunction.NON_FUNCTIONAL;
 import static other.Constants.*;
 
 public class DepartmentScreen extends BaseScreen {
@@ -46,8 +53,9 @@ public class DepartmentScreen extends BaseScreen {
     private Table resource1 = new Table();
     private Table resource2 = new Table();
     private Table resource3 = new Table();
+    
+    private Table exitbuttontable = new Table();
 
-    private Stage mainStage = new Stage();
     /**
      * Sets up department to retrieve values
      */
@@ -58,6 +66,11 @@ public class DepartmentScreen extends BaseScreen {
      */
     private Ship playerShip;
 
+    private Table playerShipTable;
+    
+    private Table titletable;
+    
+    
     /**
      * Constructor for DepartmentScreen requiring game to switch screen
      */
@@ -69,6 +82,14 @@ public class DepartmentScreen extends BaseScreen {
         musicSetup("heroic-age.mp3", true);
 
         this.playerShip = game.getPlayerShip();
+        
+        this.playerShipTable = new Table();
+        playerShipTable.padTop(70);
+        playerShipTable.padLeft(60);
+        
+        this.titletable = new Table();
+        this.titletable.padTop(170);
+        this.titletable.padLeft(30);
         
         df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.CEILING);
@@ -82,7 +103,10 @@ public class DepartmentScreen extends BaseScreen {
         textButtonStyle.down = skin.getDrawable("buttonDown");
 
         setUpTextures();
-
+        drawIndicators();
+        drawFriendlyShip();
+        drawtitles();
+        
         weaponBuyTableList = new ArrayList<Table>();
         weaponSellTableList = new ArrayList<Table>();
         roomTableList = new ArrayList<Table>();
@@ -112,12 +136,33 @@ public class DepartmentScreen extends BaseScreen {
         buttonTable.align(Align.center);
         buttonTable.setDebug(false);
         
+        mainStage.addActor(playerShipTable);
+        
+        playerShipTable.setFillParent(true);
+        playerShipTable.align(Align.topLeft);
+        
+        mainStage.addActor(titletable);
+        
+        titletable.setFillParent(true);
+        titletable.align(Align.top);
+        
         buttonToMenu();
         drawShop();
 
     }
     
     
+private void drawtitles() {
+		Label buyLabel = new Label("Buy",skin);
+		Label sellLabel = new Label("Sell",skin);
+		Label buyupgradesLabel = new Label("Buy Upgrade",skin);
+		
+		titletable.add(buyLabel).align(Align.left).padRight(170);
+		titletable.add(sellLabel).align(Align.left).padRight(130);
+		titletable.add(buyupgradesLabel).align(Align.left);
+	}
+
+
 //TODO Prevent shop being able to sell more than 4 items/player being able to sell all items
     private void drawShop(){
         for (int i = 0; i <= 3; i++){
@@ -134,7 +179,7 @@ public class DepartmentScreen extends BaseScreen {
      * Used to Draw Assets on the Screen
      */
     private SpriteBatch batch = new SpriteBatch();
-
+    		
     /**
      * Used to set values to the same no. decimal places
      */
@@ -149,20 +194,14 @@ public class DepartmentScreen extends BaseScreen {
 
     @Override
     public void update(float delta){
-    	
         Gdx.input.setInputProcessor(mainStage);
-        
-        mainStage.draw();
         
         batch.begin();
         
-        drawFriendlyShip();
-        drawHealthBar();
-        drawIndicators();
+        updateIndicators();
         
         
         batch.end();
-        
         
     }
 
@@ -221,7 +260,6 @@ public class DepartmentScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
-
     }
 
     @Override
@@ -269,45 +307,74 @@ public class DepartmentScreen extends BaseScreen {
         backgroundImage.setSize(viewwidth, viewheight);
         mainStage.addActor(backgroundImage);
     }
+    
+    private Label hpLabelCQ;
+    private Label hpLabelCN;
+    private Label hpLabelGD;
+    private Label hpLabelH;
+    private Label hpLabelE1;
+    private Label hpLabelE2;
+    private Label hpLabelE3;
+    private Label hpLabelE4;
+    
+    private void drawFriendlyShip(){
 
-    /**
-     * Draws the friendly ship from room textures and constant coordinates
-     */
-    public void drawFriendlyShip(){
-        Sprite friendlyCrewQuaters = roomSpriteAtlas.createSprite("crewQuaters");
-        friendlyCrewQuaters.setPosition(CoordBank.FRIENDLY_CREWQUATERS.getX(),CoordBank.FRIENDLY_CREWQUATERS.getY());
+        hpLabelCQ = labelMaker(CREW_QUARTERS);
+        hpLabelCN =  labelMaker(CROWS_NEST);
+        hpLabelGD = labelMaker(GUN_DECK);
+        hpLabelH = labelMaker(HELM);
+        hpLabelE1 = labelMaker(NON_FUNCTIONAL);
+        hpLabelE2 = labelMaker(NON_FUNCTIONAL);
+        hpLabelE3 = labelMaker(NON_FUNCTIONAL);
+        hpLabelE4 = labelMaker(NON_FUNCTIONAL);
 
-        Sprite friendlyEmptyRoom1 = roomSpriteAtlas.createSprite("EmptyRoom");
-        friendlyEmptyRoom1.setPosition(CoordBank.FRIENDLY_EMPTYROOM1.getX(),CoordBank.FRIENDLY_EMPTYROOM1.getY());
 
-        Sprite friendlyCrowsNest = roomSpriteAtlas.createSprite("crowsNest");
-        friendlyCrowsNest.setPosition(CoordBank.FRIENDLY_CROWSNEST.getX(),CoordBank.FRIENDLY_CROWSNEST.getY());
+        Stack groupCQ = roomSetup("crewQuaters", hpLabelCQ);
+        Stack groupE1 = roomSetup("EmptyRoom", hpLabelE1);
+        Stack groupCN = roomSetup("crowsNest", hpLabelCN);
+        Stack groupGD = roomSetup("gunDeck", hpLabelGD);
+        Stack groupE2 = roomSetup("EmptyRoom", hpLabelE2);
+        Stack groupH = roomSetup("helm", hpLabelH);
+        Stack groupE3 = roomSetup("EmptyRoom", hpLabelE3);
+        Stack groupE4 = roomSetup("EmptyRoom", hpLabelE4);
 
-        Sprite friendlyGunDeck = roomSpriteAtlas.createSprite("gunDeck");
-        friendlyGunDeck.setPosition(CoordBank.FRIENDLY_GUNDECK.getX(),CoordBank.FRIENDLY_GUNDECK.getY());
-
-        Sprite friendlyEmptyRoom2 = roomSpriteAtlas.createSprite("EmptyRoom");
-        friendlyEmptyRoom2.setPosition(CoordBank.FRIENDLY_EMPTYROOM2.getX(),CoordBank.FRIENDLY_EMPTYROOM2.getY());
-
-        Sprite friendlyHelm = roomSpriteAtlas.createSprite("helm");
-        friendlyHelm.setPosition(CoordBank.FRIENDLY_HELM.getX(),CoordBank.FRIENDLY_HELM.getY());
-
-        Sprite friendlyEmptyRoom3 = roomSpriteAtlas.createSprite("EmptyRoom");
-        friendlyEmptyRoom3.setPosition(CoordBank.FRIENDLY_EMPTYROOM3.getX(),CoordBank.FRIENDLY_EMPTYROOM3.getY());
-
-        Sprite friendlyEmptyRoom4 = roomSpriteAtlas.createSprite("EmptyRoom");
-        friendlyEmptyRoom4.setPosition(CoordBank.FRIENDLY_EMPTYROOM4.getX(),CoordBank.FRIENDLY_EMPTYROOM4.getY());
-
-        friendlyCrewQuaters.draw(batch);
-        friendlyCrowsNest.draw(batch);
-        friendlyGunDeck.draw(batch);
-        friendlyHelm.draw(batch);
-        friendlyEmptyRoom1.draw(batch);
-        friendlyEmptyRoom2.draw(batch);
-        friendlyEmptyRoom3.draw(batch);
-        friendlyEmptyRoom4.draw(batch);
+        shipTableSetup(playerShipTable, groupE1, groupE2, groupE3, groupH, groupCN, groupGD, groupCQ, groupE4);
     }
 
+    private Label labelMaker(RoomFunction room){
+        return new Label("HP:" + playerShip.getRoom(room).getHp(), skin);
+    }
+
+    private Stack roomSetup(String roomName, Label label){
+        Stack group = new Stack();
+        group.addActor(new Image(roomSpriteAtlas.findRegion(roomName)));
+        label.setAlignment(Align.bottomLeft);
+        group.addActor(label);
+        return group;
+    }
+    
+    private void shipTableSetup(Table table, Actor a1, Actor a2, Actor a3, Actor a4,
+            Actor a5, Actor a6, Actor a7, Actor a8){
+		addTwoActors(table, a1, a2);
+		addTwoActors(table, a3, a4);
+		addTwoActors(table, a5, a6);
+		addTwoActors(table, a7, a8);
+	
+	}
+
+	/**
+	* Method reduces repeated code
+	* @param table
+	* @param a1
+	* @param a2
+	*/
+	private void addTwoActors(Table table, Actor a1, Actor a2) {
+		table.add(a1).right();
+		table.add(a2);
+		table.row();
+	}
+
+    
     /**
      * Assigns a random department to be used
      * @param randInt
@@ -322,35 +389,51 @@ public class DepartmentScreen extends BaseScreen {
         }
         return null;
     }
-
-    /**
-     * Draws Hp bars for both ships
-     */
-    public void drawHealthBar() {
-        double defaultWidth = 320;
-        int width = (int)(defaultWidth * ((double)playerShip.getHullHP() / (double)playerShip.getBaseHullHP()));
-
-        batch.draw(hpBackground,25, 970, 320, 16);
-        batch.draw(hpBar,25, 970, width, 16);
-    }
-
+    
+    private Label hpLabel;
+    private Label goldLabel;
+    private Label crewLabel;
+    private Label autorepairLabel;
+    
+    
     /**
      * Draws resource indicators for player
      */
-    public void drawIndicators(){
-        indicatorFont.setColor(1,1,1,1);
+    public void drawIndicators() {
+    	hpLabel = new Label("Hull Hp:", skin);
+    	playerShipTable.add(hpLabel).colspan(2);
+    	playerShipTable.row();
+    	goldLabel = new Label("Gold:", skin);
+    	playerShipTable.add(goldLabel).colspan(2);
+    	playerShipTable.row();
+    	crewLabel = new Label("Crew:", skin);
+    	playerShipTable.add(crewLabel).colspan(2);
+    	playerShipTable.row();
+    	autorepairLabel = new Label("Autorepair:", skin);
+    	playerShipTable.add(autorepairLabel).colspan(2);
+    	playerShipTable.row();
+    	
+    }
 
-        indicatorFont.draw(batch, "Points: " + game.getPoints(), 25, 965);
-        indicatorFont.draw(batch, "Gold: " + game.getGold(), 110, 965);
-        indicatorFont.draw(batch, "Crew: " + game.getCrew(), 195, 965);
-        indicatorFont.draw(batch, "Autorepair: " + df.format(playerShip.calculateRepair()) + "%",280,965);
+    /**
+     * updates labels of the resource indicators
+     */
+    public void updateIndicators(){
+    	
+    	hpLabel.setText("Hull Hp: "+playerShip.getHullHP()+"/"+playerShip.getBaseHullHP());
+    	goldLabel.setText("Gold: "+game.getGold());
+    	crewLabel.setText("Crew: "+game.getCrew());
+    	autorepairLabel.setText("Room repair: "+df.format(playerShip.calculateRepair()));
+    	
     }
 
     /**
      * Draws the Button returning to menu, taking the style button
      */
     public void buttonToMenu(){
-        backButton.setPosition(880, 980);
+    	exitbuttontable.setFillParent(true);
+        exitbuttontable.align(Align.top);
+        
         backButton.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y) {
             	getMusic().stop();
@@ -358,7 +441,8 @@ public class DepartmentScreen extends BaseScreen {
                 changeScreen(new SailingScreen(game, false));
             }
         });
-        mainStage.addActor(backButton);
+        exitbuttontable.add(backButton).fill();
+        mainStage.addActor(exitbuttontable);
     }
 
     /**
@@ -402,6 +486,7 @@ public class DepartmentScreen extends BaseScreen {
         while (j <= buyWeaponList.size() - 1){
             TextButton textButton = new TextButton("Buy (" + buyWeaponList.get(j).getCost() + "g)", textButtonStyle);
             buyWeaponButtonListener(textButton, buyWeaponList.get(j));
+            
             Gdx.app.log("Weapon Stock", buyWeaponList.get(j).getName() + " " + j);
             weaponBuyTableList.get(j).add(new Label(buyWeaponList.get(j).getName(), skin));
             weaponBuyTableList.get(j).row();
@@ -424,6 +509,7 @@ public class DepartmentScreen extends BaseScreen {
     public void buyWeaponButtonListener(final TextButton textButton, final Weapon weapon) {
         textButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
+            	
                 try {
                     department.buyWeapon(weapon);
                     drawShop();
@@ -453,6 +539,7 @@ public class DepartmentScreen extends BaseScreen {
             sellWeaponList.add(playerShip.getWeapons().get(i));
             i++;
         }
+        
 
         int j = 0;
         while (j <= sellWeaponList.size() - 1){
@@ -556,7 +643,7 @@ public class DepartmentScreen extends BaseScreen {
      */
     public void drawBuyResourceFeatures(){
         buyResourceButtonList.add(new TextButton("Buy (" + CREW_COST + "g)", textButtonStyle));
-        resource1.add(new Label("Battle Repair", skin));
+        resource1.add(new Label("Room Repair", skin));
         resource1.row();
         resource1.add(buyResourceButtonList.get(0));
 
@@ -566,7 +653,7 @@ public class DepartmentScreen extends BaseScreen {
         resource2.add(buyResourceButtonList.get(1));
 
         buyResourceButtonList.add(new TextButton("Buy (" + REPAIR_COST + "g)", textButtonStyle));
-        resource3.add(new Label("Repair", skin));
+        resource3.add(new Label("Hull Repair", skin));
         resource3.row();
         resource3.add(buyResourceButtonList.get(2));
 
@@ -580,7 +667,7 @@ public class DepartmentScreen extends BaseScreen {
         buyResourceButtonList.get(0).addListener(new InputListener() {
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     try {
-                        department.buyResource(Resource.CREW, SHOP_CREW_AMOUNT);
+                        department.buyResource(Resource.CREW, CREW_COST);
                     } catch (IllegalStateException e) {
                     } catch (IllegalArgumentException e) {
                     }
@@ -590,7 +677,7 @@ public class DepartmentScreen extends BaseScreen {
         buyResourceButtonList.get(1).addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 try {
-                    department.buyResource(Resource.FOOD, SHOP_FOOD_AMOUNT);
+                    department.buyResource(Resource.FOOD, FOOD_COST);
                 } catch (IllegalStateException e) {
                 } catch (IllegalArgumentException e) {
                 }
@@ -600,7 +687,7 @@ public class DepartmentScreen extends BaseScreen {
         buyResourceButtonList.get(2).addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 try {
-                    department.buyResource(Resource.REPAIR, SHOP_REPAIR_AMOUNT);
+                    department.buyResource(Resource.REPAIR, REPAIR_COST);
                 } catch (IllegalStateException e) {
                 } catch (IllegalArgumentException e) {
                 }
