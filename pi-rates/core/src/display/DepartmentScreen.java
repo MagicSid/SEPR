@@ -68,6 +68,8 @@ public class DepartmentScreen extends BaseScreen {
 
     private Table playerShipTable;
     
+    private Table titletable;
+    
     
     /**
      * Constructor for DepartmentScreen requiring game to switch screen
@@ -85,6 +87,10 @@ public class DepartmentScreen extends BaseScreen {
         playerShipTable.padTop(70);
         playerShipTable.padLeft(60);
         
+        this.titletable = new Table();
+        this.titletable.padTop(170);
+        this.titletable.padLeft(30);
+        
         df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.CEILING);
 
@@ -99,6 +105,7 @@ public class DepartmentScreen extends BaseScreen {
         setUpTextures();
         drawIndicators();
         drawFriendlyShip();
+        drawtitles();
         
         weaponBuyTableList = new ArrayList<Table>();
         weaponSellTableList = new ArrayList<Table>();
@@ -134,12 +141,28 @@ public class DepartmentScreen extends BaseScreen {
         playerShipTable.setFillParent(true);
         playerShipTable.align(Align.topLeft);
         
+        mainStage.addActor(titletable);
+        
+        titletable.setFillParent(true);
+        titletable.align(Align.top);
+        
         buttonToMenu();
         drawShop();
 
     }
     
     
+private void drawtitles() {
+		Label buyLabel = new Label("Buy",skin);
+		Label sellLabel = new Label("Sell",skin);
+		Label buyupgradesLabel = new Label("Buy Upgrade",skin);
+		
+		titletable.add(buyLabel).align(Align.left).padRight(170);
+		titletable.add(sellLabel).align(Align.left).padRight(130);
+		titletable.add(buyupgradesLabel).align(Align.left);
+	}
+
+
 //TODO Prevent shop being able to sell more than 4 items/player being able to sell all items
     private void drawShop(){
         for (int i = 0; i <= 3; i++){
@@ -377,7 +400,7 @@ public class DepartmentScreen extends BaseScreen {
      * Draws resource indicators for player
      */
     public void drawIndicators() {
-    	hpLabel = new Label("Hp:", skin);
+    	hpLabel = new Label("Hull Hp:", skin);
     	playerShipTable.add(hpLabel).colspan(2);
     	playerShipTable.row();
     	goldLabel = new Label("Gold:", skin);
@@ -397,7 +420,7 @@ public class DepartmentScreen extends BaseScreen {
      */
     public void updateIndicators(){
     	
-    	hpLabel.setText("Hp: "+playerShip.getHullHP()+"/"+playerShip.getBaseHullHP());
+    	hpLabel.setText("Hull Hp: "+playerShip.getHullHP()+"/"+playerShip.getBaseHullHP());
     	goldLabel.setText("Gold: "+game.getGold());
     	crewLabel.setText("Crew: "+game.getCrew());
     	autorepairLabel.setText("Room repair: "+df.format(playerShip.calculateRepair()));
@@ -516,6 +539,7 @@ public class DepartmentScreen extends BaseScreen {
             sellWeaponList.add(playerShip.getWeapons().get(i));
             i++;
         }
+        
 
         int j = 0;
         while (j <= sellWeaponList.size() - 1){
