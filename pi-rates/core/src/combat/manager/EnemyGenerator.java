@@ -22,13 +22,9 @@ public class EnemyGenerator {
 		int weaponcount = rng.nextInt(4);
 		
 		for(int i=0;i<=weaponcount;i++) {
-			int randomwepnum = rng.nextInt(WeaponBank.values().length);
+			int randomwepnum = rng.nextInt(WeaponBank.values().length-5);
 			Weapon wep = WeaponBank.values()[randomwepnum].getWeapon();
-			if(wep.getName().equals("Boarding Harpoon")) {
-				i--;
-			}else {
-				weaponsOut.add(wep);
-			}
+			weaponsOut.add(wep);
 		}
 		
 		// these lines below randomly adjust the enemies hp and crew by upto 25% in each direction.

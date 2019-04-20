@@ -127,4 +127,7 @@ public class Weapon implements java.io.Serializable{
             currentCooldown = 0;
         }
     }
+    public void resetCooldown() {
+    	currentCooldown = 0;
+    }
 }
