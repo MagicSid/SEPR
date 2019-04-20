@@ -53,6 +53,7 @@ public class DepartmentScreen extends BaseScreen {
     private Table resource1 = new Table();
     private Table resource2 = new Table();
     private Table resource3 = new Table();
+    private Table resource4 = new Table();
     
     private Table exitbuttontable = new Table();
 
@@ -88,7 +89,7 @@ public class DepartmentScreen extends BaseScreen {
         playerShipTable.padLeft(60);
         
         this.titletable = new Table();
-        this.titletable.padTop(170);
+        this.titletable.padTop(150);
         this.titletable.padLeft(30);
         
         df = new DecimalFormat("#.##");
@@ -96,7 +97,7 @@ public class DepartmentScreen extends BaseScreen {
 
         buttonAtlas = new TextureAtlas("buttonSpriteSheet.txt");
         skin.addRegions(buttonAtlas);
-        buttonTable = new Table();
+        buttonTable = new Table().padTop(35);
 
         textButtonStyle.font = skin.getFont("default-font");
         textButtonStyle.up = skin.getDrawable("buttonUp");
@@ -126,6 +127,9 @@ public class DepartmentScreen extends BaseScreen {
         buttonTable.add(resource1);
         buttonTable.add(resource2);
         buttonTable.add(resource3);
+        buttonTable.row();
+        buttonTable.add(resource4).colspan(3);
+        
 
         drawBackground();
         drawShopBackground(createShopBackground());
@@ -459,7 +463,7 @@ private void drawtitles() {
      * @param shopBackground
      */
     public void drawShopBackground(Image shopBackground) {
-        shopBackground.setSize(shopBackground.getPrefWidth()*1.5f, shopBackground.getPrefHeight()*1.5f);
+        shopBackground.setSize(shopBackground.getPrefWidth()*1.5f, shopBackground.getPrefHeight()*1.57f);
         shopBackground.setPosition(viewwidth/2, viewheight/2, Align.center);
         shopBackground.setColor(1, 1,1,0.85f);
         mainStage.addActor(shopBackground);
@@ -657,6 +661,11 @@ private void drawtitles() {
         resource3.row();
         resource3.add(buyResourceButtonList.get(2));
 
+        buyResourceButtonList.add(new TextButton("Buy (300g)",textButtonStyle));
+        resource4.add(new Label("Increase Max Health by 200",skin));
+        resource4.row();
+        resource4.add(buyResourceButtonList.get(3));
+        
         buyResourceButtonListener();
     }
 
@@ -688,6 +697,20 @@ private void drawtitles() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 try {
                     department.buyResource(Resource.REPAIR, REPAIR_COST);
+                } catch (IllegalStateException e) {
+                } catch (IllegalArgumentException e) {
+                }
+                return true;
+            }
+        });
+        
+        buyResourceButtonList.get(3).addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                try {
+                	if(game.payGold(300)) {
+                		playerShip.setBaseHullHP(playerShip.getBaseHullHP()+200);
+                		playerShip.repairHull(200);
+                	}
                 } catch (IllegalStateException e) {
                 } catch (IllegalArgumentException e) {
                 }

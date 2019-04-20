@@ -4,6 +4,7 @@ import combat.items.RoomUpgrade;
 import combat.items.Weapon;
 
 import java.util.List;
+import java.util.ListIterator;
 
 import static java.lang.Math.log;
 import static other.Constants.*;
@@ -85,6 +86,10 @@ public class Ship implements java.io.Serializable {
 
     public int getHullHP() {
         return hullHP;
+    }
+    
+    public void setBaseHullHP(int newhealth) {
+    	this.baseHullHP = newhealth;
     }
 
     /**
@@ -207,5 +212,11 @@ public class Ship implements java.io.Serializable {
      */
     private Double calculateAutorepairEffectiveness() {
         return 0.6666 * log(0.2 * autorepair + 1) + 0.67;
+    }
+    public void resetAllWeaponCooldowns() {
+    	ListIterator<Weapon> weapons = this.weapons.listIterator();
+    	while(weapons.hasNext()) {
+    		weapons.next().resetCooldown();
+    	}
     }
 }

@@ -281,6 +281,8 @@ public class GameManager extends Game implements java.io.Serializable {
         this.Physics = new Department(PHYS_WEPS.getWeaponList(), PHYS_UPGRADES.getRoomUpgradeList(), this);
         
         this.playerShip = STARTER_SHIP.getShip();
+        this.playerShip.setBaseHullHP(700);
+        this.playerShip.repairHull(700);
         this.combatPlayer = new CombatPlayer(playerShip);
     }
 

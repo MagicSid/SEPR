@@ -99,6 +99,8 @@ public class CombatScreen extends BaseScreen {
     private TextButton youMissed;
     private TextButton enemyHit;
     private TextButton enemyMissed;
+    private TextButton fleeFailed;
+    private TextButton fleeSucceeded;
 
     /**
      * Used to set values to the same no. decimal places
@@ -132,6 +134,7 @@ public class CombatScreen extends BaseScreen {
         super(game);
         this.college = college;
         playerShip = game.getPlayerShip();
+        playerShip.resetAllWeaponCooldowns();
         this.isCollegeBattle = isCollegeBattle;
         
         /*
@@ -254,6 +257,7 @@ public class CombatScreen extends BaseScreen {
     @Override
     public void update(float delta){
         Gdx.input.setInputProcessor(mainStage);
+
         batch.begin();
         updateInfo();
 
@@ -264,45 +268,47 @@ public class CombatScreen extends BaseScreen {
             if (gameWon) {
                 youWin.setVisible(true);
 
-                if (isCollegeBattle) {
+                if (isCollegeBattle && a == 5) {
                     game.addPoints((int) (1000 * EASY_SCORE_MULTIPLIER));
                     game.addGold((int) (1000 * EASY_SCORE_MULTIPLIER));
                     college.setBossAlive(false);
                     colleges.remove(college);
-                } else {
+                } else if(a == 5) {
                     game.addPoints((int) (100 * EASY_SCORE_MULTIPLIER));
                     game.addGold((int) (100 * EASY_SCORE_MULTIPLIER));
                 }
             } else if(playerShip.getHullHP() <= 0) {
-                youLose.setVisible(true);
-                try {
-					TimeUnit.SECONDS.sleep(3);
-				} catch (InterruptedException e) { }
-                getMusic().stop();
-                changeScreen(new GameOverScreen(game));
+            	youLose.setVisible(true);
             }
-            if (colleges.isEmpty()) {
-            	getMusic().stop();
-                changeScreen(new VictoryScreen(game));
-            } else {
-                //Waits 5 Loops to ensure Above messages render, Sleeps, then returns to menu
-                if (a == 5) {
-                    try {
-                        TimeUnit.SECONDS.sleep(3);
-                    } catch (InterruptedException e) { }
-                    getMusic().stop();
+            
+            if (a == 5) {
+                try {
+                    TimeUnit.SECONDS.sleep(3);
+                } catch (InterruptedException e) { }
+                
+                if(playerShip.getHullHP()<=0) {
+                	getMusic().stop();
+                	changeScreen(new GameOverScreen(game));
+                } else if (colleges.isEmpty()) {
+                	getMusic().stop();
+                    changeScreen(new VictoryScreen(game));
+                } else {
+                	getMusic().stop();
                     changeScreen(new SailingScreen(game, false));
                 }
-                a++;
+                
             }
+            a++;
+            
         }
 
-        //Used to control how long the Hit/Miss messages are displayed, hides them after the time
+        //Used to control how long the Hit/Miss/flee messages are displayed, hides them after the time
         if (hitFeedbackTime >= 2) {
             youHit.setVisible(false);
             youMissed.setVisible(false);
             enemyHit.setVisible(false);
             enemyMissed.setVisible(false);
+            fleeFailed.setVisible(false);
         }
         hitFeedbackTime = hitFeedbackTime + delta;
     }
@@ -696,14 +702,16 @@ public class CombatScreen extends BaseScreen {
         
         flee.addListener(new InputListener() { public boolean touchDown(InputEvent
         		event, float x, float y, int pointer, int button) {
+        	flee.setChecked(true);
         	
         	double fleecheck = Math.random();
         	if (fleecheck > 0.1 ) {
+        		fleeSucceeded.setVisible(true);
         		gameOver = true;
                 gameWon = false;
         		
         	}else {
-        		//Need to Display flee failed here not finished.
+        		fleeFailed.setVisible(true);
         		
 	        	//Runs enemy Combat Loop
 	            if (combatEnemy.hasWepaonsReady()){
@@ -732,7 +740,7 @@ public class CombatScreen extends BaseScreen {
 	            }
 	            hitFeedbackTime = 0;
         	} 
-        	
+
         	return true; 
         	}
         });
@@ -794,6 +802,18 @@ public class CombatScreen extends BaseScreen {
         youLose.setPosition(viewwidth/2, viewheight/2);
         mainStage.addActor(youLose);
         youLose.setVisible(false);
+        
+        fleeFailed = new TextButton("Flee failed",textButtonStyle);
+        fleeFailed.setOrigin(Align.center);
+        fleeFailed.setPosition(viewwidth/2,viewheight/2);
+        mainStage.addActor(fleeFailed);
+        fleeFailed.setVisible(false);
+        
+        fleeSucceeded = new TextButton("Flee Succeeded",textButtonStyle);
+        fleeSucceeded.setOrigin(Align.center);
+        fleeSucceeded.setPosition(viewwidth/2,viewheight/2);
+        mainStage.addActor(fleeSucceeded);
+        fleeSucceeded.setVisible(false);
     }
 
     /**
