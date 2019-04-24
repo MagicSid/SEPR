@@ -273,6 +273,8 @@ public class SailingScreen extends BaseScreen {
                         game.setSailingShipX(this.playerShip.getX());
                         game.setSailingShipY(this.playerShip.getY());
                         game.setSailingShipRotation(this.playerShip.getRotation());
+                        //CODE CHANGE BELOW Assessment4
+                        //game.setscreens have been replaced with changescreen to keep it up to date.
                         changeScreen(new CombatScreen(game, false, college));
                     }
                 }

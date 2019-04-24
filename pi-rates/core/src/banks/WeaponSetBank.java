@@ -12,6 +12,10 @@ import static banks.WeaponBank.*;
  */
 public enum WeaponSetBank {
     //NEW_WEAPON_SET_TEMPLATE(w1, w2, w3, w4)
+	/**
+	 * CODE CHANGE BELOW Assessment4
+	 * Boarding Harpoon added to Computer science and law and management.
+	 */
     STARTER_WEAPONS(STARTER_WEAPON, STARTER_WEAPON, STARTER_WEAPON, null),
     MED_1(STORM, STORM, null, null),
     COLLEGE_WEPS(LAWBRINGER, SEPR, CRITTER, MORTAR),

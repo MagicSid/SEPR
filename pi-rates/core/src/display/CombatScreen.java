@@ -49,6 +49,7 @@ public class CombatScreen extends BaseScreen {
     /**
      * Sets up all required managers to access Methods and Cause Combat
      */
+	
     private Ship playerShip;
     private CombatPlayer combatPlayer = game.getCombatPlayer();
     private Ship enemyShip;
@@ -99,6 +100,8 @@ public class CombatScreen extends BaseScreen {
     private TextButton youMissed;
     private TextButton enemyHit;
     private TextButton enemyMissed;
+    //CODE CHANGE BELOW Assessment4
+    // added buttons for flee.
     private TextButton fleeFailed;
     private TextButton fleeSucceeded;
 
@@ -122,6 +125,8 @@ public class CombatScreen extends BaseScreen {
     private Table playerShipTable;
     private Table enemyShipTable;
     private Table attackTable;
+    //CODE CHANGE BELOW Assessment4
+    //added table for enemy weapons text
     private Table enemyWeaponsTable;
     private Label titleLabel;
 
@@ -138,6 +143,7 @@ public class CombatScreen extends BaseScreen {
         this.isCollegeBattle = isCollegeBattle;
         
         /*
+         * CODE CHANGE BELOW Assessment4
          * Disable save options during combat to prevent crashes
          */
         this.saveButton.setVisible(false);
@@ -167,6 +173,8 @@ public class CombatScreen extends BaseScreen {
 
         titleLabel = new Label("", skin, "title");
         
+        //CODE CHANGE BELOW Assessment4
+        //Methods added to generated enemy
         if(this.isCollegeBattle) {
         	setupCollegeShip();
         }else {
@@ -268,6 +276,8 @@ public class CombatScreen extends BaseScreen {
             if (gameWon) {
                 youWin.setVisible(true);
 
+                //CODE CHANGE BELOW Assessment4
+                //added a as a requirement since a is the looping value.
                 if (isCollegeBattle && a == 5) {
                     game.addPoints((int) (1000 * EASY_SCORE_MULTIPLIER));
                     game.addGold((int) (1000 * EASY_SCORE_MULTIPLIER));
@@ -277,6 +287,8 @@ public class CombatScreen extends BaseScreen {
                     game.addPoints((int) (100 * EASY_SCORE_MULTIPLIER));
                     game.addGold((int) (100 * EASY_SCORE_MULTIPLIER));
                 }
+                //CODE CHANGE BELOW Assessment4
+                //changed how you lose text displayed and moved all screen changes till after the loop.
             } else if(playerShip.getHullHP() <= 0) {
             	youLose.setVisible(true);
             }
@@ -308,6 +320,8 @@ public class CombatScreen extends BaseScreen {
             youMissed.setVisible(false);
             enemyHit.setVisible(false);
             enemyMissed.setVisible(false);
+            //CODE CHANGE BELOW Assessment4
+            //added flee failed where needed.
             fleeFailed.setVisible(false);
         }
         hitFeedbackTime = hitFeedbackTime + delta;
@@ -696,7 +710,9 @@ public class CombatScreen extends BaseScreen {
         
         
         
-		
+		//CODE CHANGE BELOW Assessment4
+        //flee button added below
+        //flee has a 90% success change. Change the 0.1 to change the flee success chance.
         final TextButton flee = new TextButton("Flee",weaponButtonStyle);
         attackTable.add(flee);
         
@@ -803,6 +819,8 @@ public class CombatScreen extends BaseScreen {
         mainStage.addActor(youLose);
         youLose.setVisible(false);
         
+        //CODE CHANGE BELOW Assessment4
+        //Added flee buttons for success and failure
         fleeFailed = new TextButton("Flee failed",textButtonStyle);
         fleeFailed.setOrigin(Align.center);
         fleeFailed.setPosition(viewwidth/2,viewheight/2);
@@ -839,6 +857,11 @@ public class CombatScreen extends BaseScreen {
         return button;
     }
     
+    /**
+     * CODE CHANGE BELOW Assessment4
+     * Added separate setup for college ships and enemy ships but this could simply be changed to 1 method with a boolean instead potentially.
+     * Also added method to draw the enemy weapon names into a table and draw that.
+     */
     private void setupCollegeShip() {
     	EnemyGenerator enemygen = new EnemyGenerator(200,1200);
     	Ship ship = enemygen.returnship();

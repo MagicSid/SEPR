@@ -9,7 +9,13 @@ import combat.ship.Room;
 import combat.ship.Ship;
 import banks.RoomSetBank;
 import banks.WeaponBank;
-
+/**
+ * @author jake
+ *CODE CHANGE BELOW Assessment4
+ * Class created for assessment 4
+ * Generates a new enemy based on the parameters passed for crew and hp.
+ * Generates random weaponry for the new enemy as well
+ */
 public class EnemyGenerator {
 	int crew;
 	List<Room> roomsOut = new ArrayList<Room>();

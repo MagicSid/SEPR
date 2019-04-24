@@ -127,6 +127,8 @@ public class Weapon implements java.io.Serializable{
             currentCooldown = 0;
         }
     }
+    //CODE CHANGE BELOW Assessment4
+    // Added new method to reset cooldown before first turn specifically for the player.
     public void resetCooldown() {
     	currentCooldown = 0;
     }

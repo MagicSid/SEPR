@@ -96,6 +96,8 @@ public class Department implements java.io.Serializable {
      * @param resource The resource that you want to buy
      * @param amount The amount of resources you want to buy
      */
+    //CODE CHANGE BELOW Assessment4
+    //Minor changes below due to food and crew being replaced with crew and autorepair.
     public void buyResource(Resource resource, int amount) {
         if (!resourceStock.keySet().contains(resource)) {
             throw new IllegalArgumentException("Resource not valid");
