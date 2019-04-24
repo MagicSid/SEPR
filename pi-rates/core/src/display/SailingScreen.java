@@ -273,8 +273,7 @@ public class SailingScreen extends BaseScreen {
                         game.setSailingShipX(this.playerShip.getX());
                         game.setSailingShipY(this.playerShip.getY());
                         game.setSailingShipRotation(this.playerShip.getRotation());
-                        getMusic().stop();
-                        game.setScreen(new CombatScreen(game, false, college));
+                        changeScreen(new CombatScreen(game, false, college));
                     }
                 }
             }
@@ -301,8 +300,7 @@ public class SailingScreen extends BaseScreen {
                         game.setSailingShipX(this.playerShip.getX());
                         game.setSailingShipY(this.playerShip.getY());
                         game.setSailingShipRotation(this.playerShip.getRotation());
-                        getMusic().stop();
-                        game.setScreen(new DepartmentScreen(game, obstacle.getDepartment()));
+                        changeScreen(new DepartmentScreen(game, obstacle.getDepartment()));
                     }
                 }
                 // Obstacle must be a college if college not null
@@ -319,8 +317,7 @@ public class SailingScreen extends BaseScreen {
                             game.setSailingShipX(this.playerShip.getX());
                             game.setSailingShipY(this.playerShip.getY());
                             game.setSailingShipRotation(this.playerShip.getRotation());
-                            getMusic().stop();
-                            game.setScreen(new MinigameScreen(game));
+                            changeScreen(new MinigameScreen(game));
                         }
                     } else if (college.isBossAlive()) {
                         mapMessage.setText(capitalizeFirstLetter(name) + " Island");
@@ -330,8 +327,7 @@ public class SailingScreen extends BaseScreen {
                             game.setSailingShipX(this.playerShip.getX());
                             game.setSailingShipY(this.playerShip.getY());
                             game.setSailingShipRotation(this.playerShip.getRotation());
-                            getMusic().stop();
-                            game.setScreen(new CombatScreen(game, true, college));
+                            changeScreen(new CombatScreen(game, true, college));
                         }
                     } else {
                         mapMessage.setText(capitalizeFirstLetter(name) + " Island (Sacked)");
