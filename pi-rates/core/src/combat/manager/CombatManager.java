@@ -18,6 +18,8 @@ import static other.Constants.NON_FUNCTIONAL_ROOM_MULTIPLIER;
 /**
  * The class that controls the flow of combat and decides if shots hit or not.
  * Had to implement Serializable due to encoding needed for saving game data
+ * CODE CHANGE BELOW Assessment4
+ * No longer able to save in combat so the above text should be ignored.
  */
 public class CombatManager implements java.io.Serializable {
     private CombatPlayer player;

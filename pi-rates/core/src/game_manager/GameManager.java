@@ -269,6 +269,10 @@ public class GameManager extends Game implements java.io.Serializable {
     }
     
     public void resetgamestate() {
+    	/**
+    	 * CODE CHANGE BELOW Assessment4
+    	 * New method added to reset the game state if the player creates a new game after having played in the session already.
+    	 */
     	this.gold = STARTING_GOLD;
     	this.crew = STARTING_FOOD;
     	this.points = 0;

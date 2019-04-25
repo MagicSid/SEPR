@@ -9,6 +9,13 @@ import static other.Constants.*;
  */
 public enum WeaponBank {
     //NEW_WEAPON_TEMPLATE("name", cost, damage, cooldown, crit, accuracy)
+	/**
+	 * CODE CHANGE BELOW Assessment4
+	 * Ordering of weapons changed to help enemy gen pick non-player weapons
+	 * Boarding Harpoon added
+	 * Crew cost attribute added
+	 * New constructor specifically for crew cost
+	 */
     STARTER_WEAPON("Pea Shooter", DEFAULT_WEAPON_COST / 4, DEFAULT_WEAPON_DAMAGE / 4,
             DEFAULT_WEAPON_COOLDOWN / 2, DEFAULT_WEAPON_CRIT_CHANCE, DEFAULT_WEAPON_HIT_CHANCE),
 

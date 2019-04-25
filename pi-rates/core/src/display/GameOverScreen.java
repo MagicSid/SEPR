@@ -16,6 +16,10 @@ import base.BaseScreen;
 import game_manager.GameManager;
 
 public class GameOverScreen extends BaseScreen {
+	/**
+	 * CODE CHANGE BELOW Assessment4
+	 * New screen added for assessment 4. Used when player is defeated in combat - saving disabled and return to menu button present.
+	 */
 	private Texture endBackground = new Texture("battleBackground.png");
 	private Image background = new Image(endBackground);
 	

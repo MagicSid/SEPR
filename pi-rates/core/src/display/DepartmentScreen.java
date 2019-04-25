@@ -83,11 +83,14 @@ public class DepartmentScreen extends BaseScreen {
         musicSetup("heroic-age.mp3", true);
 
         this.playerShip = game.getPlayerShip();
-        
+        //CODE CHANGE BELOW Assessment4
+        //New table to display player's ship based on new display system.
         this.playerShipTable = new Table();
         playerShipTable.padTop(70);
         playerShipTable.padLeft(60);
         
+        //CODE CHANGE BELOW Assessment4
+        //new table for shop titles.
         this.titletable = new Table();
         this.titletable.padTop(150);
         this.titletable.padLeft(30);
@@ -139,7 +142,8 @@ public class DepartmentScreen extends BaseScreen {
         buttonTable.setFillParent(true);
         buttonTable.align(Align.center);
         buttonTable.setDebug(false);
-        
+        //CODE CHANGE BELOW Assessment4
+        //add new tables to the stage.
         mainStage.addActor(playerShipTable);
         
         playerShipTable.setFillParent(true);
@@ -156,7 +160,12 @@ public class DepartmentScreen extends BaseScreen {
     }
     
     
-private void drawtitles() {
+    private void drawtitles() {
+    	/**
+    	 * CODE CHANGE BELOW Assessment4
+    	 * New method to draw titles for the shop screen.
+    	 */
+	
 		Label buyLabel = new Label("Buy",skin);
 		Label sellLabel = new Label("Sell",skin);
 		Label buyupgradesLabel = new Label("Buy Upgrade",skin);
@@ -311,6 +320,10 @@ private void drawtitles() {
         backgroundImage.setSize(viewwidth, viewheight);
         mainStage.addActor(backgroundImage);
     }
+    /**
+     * CODE CHANGE BELOW Assessment4
+     * code below from the combat screen to draw the players ship out in full.
+     */
     
     private Label hpLabelCQ;
     private Label hpLabelCN;
@@ -404,6 +417,8 @@ private void drawtitles() {
      * Draws resource indicators for player
      */
     public void drawIndicators() {
+    	//CODE CHANGE BELOW Assessment4
+    	//New labels used for displaying player hp,gold,crew and autorepair.
     	hpLabel = new Label("Hull Hp:", skin);
     	playerShipTable.add(hpLabel).colspan(2);
     	playerShipTable.row();
@@ -420,6 +435,7 @@ private void drawtitles() {
     }
 
     /**
+     * CODE CHANGE BELOW Assessment4
      * updates labels of the resource indicators
      */
     public void updateIndicators(){
@@ -440,7 +456,6 @@ private void drawtitles() {
         
         backButton.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y) {
-            	getMusic().stop();
                 Gdx.app.debug("Department DEBUG", "Button Pressed");
                 changeScreen(new SailingScreen(game, false));
             }
@@ -643,6 +658,8 @@ private void drawtitles() {
     }
 
     /**
+     * CODE CHANGE BELOW Assessment4
+     * minor changes to names, added button for health upgrade. Same for the listeners.
      * Draws buttons and information for buying resources
      */
     public void drawBuyResourceFeatures(){

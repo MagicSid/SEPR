@@ -66,9 +66,16 @@ public abstract class BaseScreen implements Screen {
     private Label soundLabel;
     private Label musicLabel;
     protected Preferences prefs;
-
+    
+    
+    //CODE CHANGE BELOW Assessment4
+    //Savebutton and mainmenu button no longer inaccessible from other screens so they can be hidden appropriately.
     protected TextButton saveButton;
     protected TextButton mainMenuButton;
+    
+    // CODE CHANGE BELOW Assessment4
+    // screenchanging boolean added
+    protected Boolean screenchanging = false;
     /**
      * A music object to hold the music for the game
      */
@@ -205,7 +212,7 @@ public abstract class BaseScreen implements Screen {
         musicLabel.setText((int)(game.getMusicValue() * 100) + " / " + 100);
         
         try {
-        	getMusic().setVolume(game.getMusicVolume());
+        	music.setVolume(game.getMusicVolume());
         } catch(Exception e){ }
         
     }
@@ -214,11 +221,16 @@ public abstract class BaseScreen implements Screen {
      * Setting a new screen after calling the current one's dispose method
      */
     public void changeScreen(BaseScreen screen) {
-    	try {
-        getMusic().stop();
-    	} catch(Exception e) { }
-        dispose();
-        game.setScreen(screen);
+    	//CODE CHANGE BELOW Assessment4
+    	//Added screenchanging check to prevent duplicate screens being created when you move from sailing to another screen.
+    	if(!screenchanging) {
+	    	screenchanging = true;
+	    	while(music.isPlaying()) {
+	    		music.stop();
+	    	}
+	        dispose();
+	        game.setScreen(screen);
+    	}
     }
 
     public Sound makeSound(String filename) { return Gdx.audio.newSound(Gdx.files.internal(filename)); }
@@ -262,8 +274,8 @@ public abstract class BaseScreen implements Screen {
         this.mainStage.dispose();
         this.pauseStage.dispose();
         try {
-	        this.getMusic().stop();
-	        this.getMusic().dispose();
+	        this.music.stop();
+	        this.music.dispose();
         } catch(Exception e) {}
     }
 
