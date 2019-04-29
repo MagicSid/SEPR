@@ -30,7 +30,7 @@ public class SailingShip extends PhysicsActor {
         this.setWidth(this.sailingTexture.getWidth());
         this.setHeight(this.sailingTexture.getHeight());
         this.setOriginCentre();
-        this.setMaxSpeed(200);
+        this.setMaxSpeed(250);
         this.setDeceleration(0);
         this.setEllipseBoundary();
     }

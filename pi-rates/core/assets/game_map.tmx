@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="120" height="120" tilewidth="64" tileheight="64" infinite="0" nextlayerid="12" nextobjectid="772">
+<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="120" height="120" tilewidth="64" tileheight="64" infinite="0" nextlayerid="14" nextobjectid="984">
  <tileset firstgid="1" source="rpg-tiles-64.tsx"/>
  <tileset firstgid="261" source="map-tiles-64.tsx"/>
- <layer id="8" name="Water" width="120" height="120">
+ <layer id="8" name="Water" width="120" height="120" locked="1">
   <data encoding="base64" compression="zlib">
    eJztw0ENAAAMA6GTUv8qJ2JfSFg1VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVfX1AE3PCGo=
   </data>
  </layer>
- <layer id="9" name="Background" width="120" height="120">
+ <layer id="9" name="Background" width="120" height="120" locked="1">
   <data encoding="base64" compression="zlib">
    eJztndFu2yAUhuPbpnuBLrtvo+x+y7b3f63FUlAJxQZs4/NDvk9CjXJTdD4fwM4BHw4A8Gy8DIfD6619G+a/gzZ5uzn8fmu/PJ+x71QZr8Xj/Xo8NtDfvTnfXTqfY5x+B98dBfP5JdLXsf0Q6qMCb0F85ppSPk/1W6mPCpwL/CrFb67fPwX6p8L1FouPBY6t57q5cYcx+pHSHFbIE+v8deu6rVrNXCmZg1XyxDp/l8bMos9L89dyLp7r8x79asmvm4Pfb+3vUDYfWzlOxbf2GN2S35HR8b/h83Op473XW6kxp3a8WvMbkuvY5fwf7/qozbi2CZ9r7D2utO53JOX4fUenPrmxrRmzHvyOXO+5GfNs0aec3N0jh3vx67h647BzbXH/WxrXWn3sza+Py2mLsbn0Xq5W3Hr2a0XJ2Dy2musD/G7P3Fpg75jhtx65Y3TN9QF+65Eb25rrZzeWbNUs1jKKlM7BKr9XQx5LxkXGvnbwfwvJXWuRw21x9tZOCmstdfwa0xauc/+3rpzx2uo5uSWuvvQ4fK2HbcGxw39uGj4/fUa3U3XDPa1HfOfP4vYlkqusR/qg9J7RObaugYU0S9yy7myDJW7dfeWzzV+tsTRvW19bPQst7kmAfNbUrLOu0sf9fhW75+d5T3+cA3+++/AvbtvDz2f8AQAAAAAAAADUg7NN+6als02hnPC8Uxz3RVjPjOO+CM90OQ2PZxS3VIcPcWKOT5G8fsX7Yly9tFW8YmczhY6p3S7D34fkavMs6+1Sji8Tjqkhe2Rqb4NCnc5UHdkl8Ot7pwb0k7k6WoU4vUWcTuUt+ftIqkbaOk5+/3K8qow5KszV0CrEKczdWD/DNZflmLP2TPet14XWZ6DP4efuKTLXxu6ZrMectWcmbR1z63cYTDE3b4SuwzxWfWeAhV/V/J277i6RpnJdqvm1fodBjNSa7zJ8da1yXSr5zdlfaH3+b2x+Tfklf/P7YpEL/phyGaafV8XcWq/5Vfzm7g22zt+pudZ99t1buw37buW3ZN+3df6G43LoV8ntiILf3D6ovzvjsnFctkDBb+6+b8v3efj7VXP2LVs/R3VY+y0Zm1ViNrdPXeGZho+V35wz68Km+ju5y++PDeKyNVZ+l/5f5bM4FPerW/ldetaKWn6oo56//rkc/vjn17Ip5rIKa9/JsHQcCv9vbE0a3g+F6xrOXmmHmDu8AQAAAAAAAAAAAAAAAAAA2LJ2X7nlHnRIs7bu6xlq8fbMga3zAL9p9ozR1nHCbxr84lc1TvhNg1/8qsYJv2nwi1/VOOE3DX7xqxon/KbBL35V44TfNPjFr2qc8JsGv/hVjRN+0+C3b79rz0YpbVueh4HfvsFv3+w59nAODwAAAAAAWPMfE4lXtA==
   </data>
  </layer>
- <layer id="10" name="Scenery" width="120" height="120">
+ <layer id="10" name="Scenery" width="120" height="120" locked="1">
   <data encoding="base64" compression="zlib">
    eJztwTEBAAAAwqD1T20IX6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgNcA4QAAAQ==
   </data>
  </layer>
- <layer id="11" name="Overlay" width="120" height="120">
+ <layer id="11" name="Overlay" width="120" height="120" locked="1">
   <data encoding="base64" compression="zlib">
    eJztwTEBAAAAwqD1T20IX6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgNcA4QAAAQ==
   </data>
  </layer>
- <objectgroup id="5" name="ObjectData">
+ <objectgroup id="5" name="ObjectData" locked="1">
   <object id="1" name="player" x="2182.67" y="1457.33" width="49.3333" height="62.6667"/>
  </objectgroup>
- <objectgroup id="6" name="PhysicsData">
+ <objectgroup id="6" name="PhysicsData" locked="1">
   <object id="8" name="lawandmanagement" x="1348" y="1920" width="92" height="64"/>
   <object id="9" name="lawandmanagement" x="1444" y="1928" width="10.6667" height="157.333"/>
   <object id="10" name="lawandmanagement" x="1220" y="2081.33" width="206.667" height="26.6667"/>
@@ -730,12 +730,20 @@
   <object id="757" name="langwith" x="6217" y="3715" width="1083" height="1018"/>
   <object id="759" name="goodricke" x="5892" y="513.333" width="1342.67" height="894.667"/>
  </objectgroup>
- <objectgroup id="7" name="RegionData">
+ <objectgroup id="7" name="RegionData" locked="1">
   <object id="721" name="derwentregion" x="16" y="2728" width="2592" height="2392"/>
   <object id="722" name="vanbrughregion" x="2620" y="2584" width="2504" height="2548"/>
   <object id="723" name="jamesregion" x="3152" y="8" width="1976" height="2336"/>
   <object id="769" name="goodrickeregion" x="5440" y="4" width="2244" height="2012"/>
   <object id="770" name="langwithregion" x="5576" y="3068" width="2108" height="2096"/>
   <object id="771" name="alcuinregion" x="4732" y="5500" width="2964" height="2184"/>
+ </objectgroup>
+ <objectgroup id="13" name="StormLocationData">
+  <object id="983" name="stormpain" x="2500" y="5400" width="2000" height="2000">
+   <ellipse/>
+  </object>
+  <object id="982" name="stormwarning" x="2300" y="5200" width="2400" height="2400">
+   <ellipse/>
+  </object>
  </objectgroup>
 </map>

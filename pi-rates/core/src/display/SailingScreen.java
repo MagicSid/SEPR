@@ -8,17 +8,22 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.CircleMapObject;
+import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
-
+import combat.ship.Ship;
 import location.College;
+import location.Storm;
 import sailing.SailingShip;
 
 import java.util.ArrayList;
@@ -84,6 +89,7 @@ public class SailingScreen extends BaseScreen {
      */
     private Label pointsLabel;
     private Label goldLabel;
+    private Label healthLabel;
     private Label collegesaliveLabel;
     private Label mapMessage;
     private Label hintMessage;
@@ -117,6 +123,10 @@ public class SailingScreen extends BaseScreen {
         goldLabel = new Label(Integer.toString(game.getGold()), skin, "default_black");
         goldLabel.setAlignment(Align.left);
         
+        Label healthTextLabel = new Label("Health:", skin, "default_black");
+        healthLabel = new Label(Integer.toString(game.getPlayerShip().getHullHP()), skin, "default_black");
+        healthLabel.setAlignment(Align.left);
+        
         Label collegeTextLabel = new Label("Defeat all colleges to win!",skin, "default_black");
         
         Label collegesaliveTextLabel = new Label("Colleges left to defeat:",skin,"default_black");
@@ -129,6 +139,9 @@ public class SailingScreen extends BaseScreen {
         uiTable.row();
         uiTable.add(goldTextLabel).fill();
         uiTable.add(goldLabel).fill();
+        uiTable.row();
+        uiTable.add(healthTextLabel).fill();
+        uiTable.add(healthLabel).fill();
         uiTable.row();
         uiTable.add(collegeTextLabel).fill();
         uiTable.row();
@@ -167,11 +180,9 @@ public class SailingScreen extends BaseScreen {
         MapObjects objects = tiledMap.getLayers().get("ObjectData").getObjects();
         for (MapObject object : objects) {
             String name = object.getName();
-
             // all object data assumed to be stored as rectangles
             RectangleMapObject rectangleObject = (RectangleMapObject)object;
             Rectangle r = rectangleObject.getRectangle();
-
             if (name.equals("player") && isFirstSailingInstance){
                 playerShip.setPosition(r.x, r.y);
             } else if (name.equals("player") && !isFirstSailingInstance) {
@@ -188,7 +199,7 @@ public class SailingScreen extends BaseScreen {
                 RectangleMapObject rectangleObject = (RectangleMapObject) object;
                 Rectangle r = rectangleObject.getRectangle();
 
-                BaseActor solid = new BaseActor();
+                BaseActor solid = new BaseActor( );
                 solid.setPosition(r.x, r.y);
                 solid.setSize(r.width, r.height);
                 solid.setName(object.getName());
@@ -208,7 +219,19 @@ public class SailingScreen extends BaseScreen {
                     Gdx.app.debug("Sailing DEBUG", "Not college/department: " + solid.getName());
                 }
                 obstacleList.add(solid);
-            } else {
+            	}
+//                else if (object instanceof CircleMapObject){
+//                CircleMapObject circleObject =(CircleMapObject) object;
+//                Circle c = circleObject .getCircle();
+//             
+//                BaseActor solid = new BaseActor();
+//                solid.setPosition(c.x, c.y);
+//                solid.setRadius(c.radius);
+//                solid.setName(object.getName());
+//                solid.setCircleBoundary();
+//                String objectName = object.getName();
+//            }
+                else {
                 System.err.println("Unknown PhysicsData object.");
             }
         }
@@ -236,9 +259,26 @@ public class SailingScreen extends BaseScreen {
                 System.err.println("Unknown RegionData object.");
             }
         }
+        
+        objects = tiledMap.getLayers().get("StormLocationData").getObjects();
+        for (MapObject object:objects){
+        	
+        		EllipseMapObject circleObject =(EllipseMapObject) object;
+        		Ellipse c =circleObject.getEllipse();
+            	
+            	BaseActor region = new BaseActor();
+                region.setPosition(c.x, c.y);
+                region.setSize(c.width,c.height);
+                region.setEllipseBoundary();
+                region.setName(object.getName());
+                
+                //in UPDATE then we'll check names. For now it should spawn        
+                if (object.getName().equals("stormpainregion")) region.setStorm(Storm.Stormpain);
+                else if (object.getName().equals("stormwarnregion")) region.setStorm(Storm.Stormwarning);
+                regionList.add(region);
+        }
 
         timer = 0f;
-
         InputMultiplexer im = new InputMultiplexer(uiStage, mainStage);
         Gdx.input.setInputProcessor(im);
 
@@ -249,36 +289,64 @@ public class SailingScreen extends BaseScreen {
     public void update(float delta) {
         removeList.clear();
         goldLabel.setText(Integer.toString(game.getGold()));
+        healthLabel.setText(Integer.toString(game.getPlayerShip().getHullHP()));
         this.playerShip.playerMove(delta);
         String collegesalive = "";
         Boolean x = false;
+        Boolean stormpain =false;
         for (BaseActor region : regionList) {
-            String name = region.getName();
-            
-            if(region.getCollege().isBossAlive()) {
-            	collegesalive += region.getCollege().getName() + " "; 
-            }
-            collegesalive.substring(0,collegesalive.length() -2);
-            
-            if (playerShip.overlaps(region, false)) {
-                x = true;
+        	if (!region.getName().equals("stormpain") && !region.getName().equals("stormwarning")){
+	            String name = region.getName();	        
+	            // Remove try later
+	            try {
+		            if (region.getCollege().isBossAlive()) {
+		            	collegesalive += region.getCollege().getName() + " "; 
+		            }
+	            } catch (Exception e){
+	            	System.out.println(region.getName());
+	            }
+		            
+	            collegesalive.substring(0,collegesalive.length() -2);
+	            
+	            if (playerShip.overlaps(region, false)) {
+	                x = true;
+	                stormpain=false;
+	                mapMessage.setText(capitalizeFirstLetter(name.substring(0, name.length() - 6)) + " Territory");
+	
+	                int enemyChance = ThreadLocalRandom.current().nextInt(0, 10001);
+	                if (enemyChance <= 10) {
+	                    Gdx.app.log("Sailing", "Enemy Found in " + name);
+	                    College college = region.getCollege();
+	                    if(college != null) {
+		                    if (college.isBossAlive() && !playerShip.getCollege().equals(college)) {
+		                        game.setSailingShipX(this.playerShip.getX());
+		                        game.setSailingShipY(this.playerShip.getY());
+		                        game.setSailingShipRotation(this.playerShip.getRotation());
+		                        //CODE CHANGE BELOW Assessment4
+		                        //game.setscreens have been replaced with changescreen to keep it up to date.
+		                        changeScreen(new CombatScreen(game, false, college));
+		                    }
+	                    }
+	                }
+	            }
+        	}else {
+        		String name=region.getName();
+            	if (playerShip.overlaps(region, false)) {
+            		x = true;
+            		if (name.equals("stormpain")){
+            				//Do damage, tell player
+            				game.getPlayerShip().damage(Storm.Stormpain.howpainful());
+                            mapMessage.setText("TAKING STORM DAMAGE CAPTAIN");
+                            stormpain=true;
+            			//Warn player they're close to the storm
+            		} else if (name.equals("stormwarning" ) && stormpain==false){
+                        mapMessage.setText("DANGER CAPTAIN, STORM WARNING");
+                        stormpain=false;
+            		}
+                   
 
-                mapMessage.setText(capitalizeFirstLetter(name.substring(0, name.length() - 6)) + " Territory");
-
-                int enemyChance = ThreadLocalRandom.current().nextInt(0, 10001);
-                if (enemyChance <= 10) {
-                    Gdx.app.log("Sailing", "Enemy Found in " + name);
-                    College college = region.getCollege();
-                    if (college.isBossAlive() && !playerShip.getCollege().equals(college)) {
-                        game.setSailingShipX(this.playerShip.getX());
-                        game.setSailingShipY(this.playerShip.getY());
-                        game.setSailingShipRotation(this.playerShip.getRotation());
-                        //CODE CHANGE BELOW Assessment4
-                        //game.setscreens have been replaced with changescreen to keep it up to date.
-                        changeScreen(new CombatScreen(game, false, college));
-                    }
-                }
-            }
+            	}
+        	}
         }
         
         collegesaliveLabel.setText(collegesalive);

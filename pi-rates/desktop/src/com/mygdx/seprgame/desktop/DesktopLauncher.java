@@ -18,6 +18,6 @@ public class DesktopLauncher {
 		config.backgroundFPS = config.foregroundFPS;
 		config.forceExit = false;
 
-		new LwjglApplication(new GameManager("Pirate", Difficulty.EASY), config);
+		new LwjglApplication(new GameManager("Pirate", Difficulty.HARD), config);
 	}
 }
