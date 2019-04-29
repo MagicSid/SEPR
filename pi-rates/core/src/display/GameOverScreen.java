@@ -83,15 +83,17 @@ public class GameOverScreen extends BaseScreen {
 		uitable.add(closeButton);
 		uitable.row();
 		
-		menuButton = new TextButton("Back to Menu",textButtonStyle);
-		
-		menuButton.addListener(new ClickListener(){
-            public void clicked(InputEvent event, float x, float y) {
-            	changeScreen(new MenuScreen(game));
-            }
-        });
-		
-		uitable.add(menuButton);
+		// not currently working. Removed for later editing
+//		menuButton = new TextButton("Back to Menu",textButtonStyle);
+//		
+//		menuButton.addListener(new ClickListener(){
+//            public void clicked(InputEvent event, float x, float y) {
+//            	
+//            	changeScreen(new MenuScreen(game));
+//            }
+//        });
+//		
+//		uitable.add(menuButton);
 	}
 
 	@Override

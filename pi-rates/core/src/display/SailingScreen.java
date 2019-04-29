@@ -171,8 +171,9 @@ public class SailingScreen extends BaseScreen {
         regionList = new ArrayList<BaseActor>();
 
         // set up tile map, renderer and camera
-        tiledMap = new TmxMapLoader().load("game_map3.tmx");
-        //JAKE THIS IS WHERE MAP IS LOADED
+        int mapchoice = ThreadLocalRandom.current().nextInt(1,6);
+        tiledMap = new TmxMapLoader().load("game_map"+mapchoice+".tmx");
+        
      
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         tiledCamera = new OrthographicCamera();
@@ -331,6 +332,9 @@ public class SailingScreen extends BaseScreen {
             				game.getPlayerShip().damage(Storm.Stormpain.howpainful());
                             mapMessage.setText("TAKING STORM DAMAGE CAPTAIN");
                             stormpain=true;
+                            if (game.getPlayerShip().getHullHP()==0) {
+                            	changeScreen(new GameOverScreen(game));
+                            }
             			//Warn player they're close to the storm
             		} else if (name.equals("stormwarning" ) && stormpain==false){
                         mapMessage.setText("DANGER CAPTAIN, STORM WARNING");

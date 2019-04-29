@@ -225,12 +225,14 @@ public abstract class BaseScreen implements Screen {
     	//Added screenchanging check to prevent duplicate screens being created when you move from sailing to another screen.
     	if(!screenchanging) {
 	    	screenchanging = true;
-	    	while(music.isPlaying()) {
-	    		music.stop();
+	    	if(music!= null) {
+		    	while(music.isPlaying()) {
+		    		music.stop();
+		    	}
+		        dispose();
+		        game.setScreen(screen);
 	    	}
-	        dispose();
-	        game.setScreen(screen);
-    	}
+	    }
     }
 
     public Sound makeSound(String filename) { return Gdx.audio.newSound(Gdx.files.internal(filename)); }
