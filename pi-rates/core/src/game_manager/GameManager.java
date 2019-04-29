@@ -49,6 +49,8 @@ public class GameManager extends Game implements java.io.Serializable {
     /**
      * The difficulty that the player is playing on.
      */
+
+    
     private Difficulty difficulty;
     
 
@@ -196,6 +198,11 @@ public class GameManager extends Game implements java.io.Serializable {
     public void addPoints(int amount) {
         this.points += amount;
     }
+    
+    public int getHealth() {
+        return this.playerShip.getHullHP();
+    }
+
 
     public String getPlayerName() {
         return playerName;

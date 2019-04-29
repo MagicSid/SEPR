@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import location.College;
 import location.Department;
+import location.Storm;
 
 public class BaseActor extends Group {
 
@@ -21,7 +22,7 @@ public class BaseActor extends Group {
      */
     private College college;
     private Department department;
-
+    private Storm storm;
     public BaseActor() {
         super();
         region = new TextureRegion();
@@ -52,7 +53,8 @@ public class BaseActor extends Group {
     }
 
     /**
-     * Set the boundary for a BaseActor object as an ellipse
+     * Set the boundary for a BaseActor object as an ellipse 
+     * Is... this hardcoded for creating playerships?
      */
     public void setEllipseBoundary() {
         // number of vertices;
@@ -70,8 +72,31 @@ public class BaseActor extends Group {
         boundingPolygon = new Polygon(vertices);
         boundingPolygon.setOrigin(getOriginX(), getOriginY());
     }
-
     /**
+     * Set the boundary for a BaseActor object as an Circle, for maelstrom
+     */
+    public void setCircleBoundary() {
+        // number of vertices;
+        int n = 24;
+        float r=getRadius();
+        float[] vertices = new float[2*n];
+        for (int i = 0; i < n; i++) {
+            float t = i*6.28f/n;
+            // x-coordinate
+            vertices[2*i] = r/2 * MathUtils.cos(t) + r/2;
+            // y-coordinate
+            vertices[2*i+1] = r/2 * MathUtils.sin(t) + r/2;
+        }
+        boundingPolygon = new Polygon(vertices);
+        boundingPolygon.setOrigin(getOriginX(), getOriginY());
+    }
+
+    private float getRadius() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	/**
      * @return The bounding polygon of a BaseActor object
      */
     public Polygon getBoundingPolygon() {
@@ -126,4 +151,13 @@ public class BaseActor extends Group {
     public void setCollege(College college) {
         this.college = college;
     }
+   
+    public Storm getStorm() {
+        return storm;
+    }
+
+	 public void setStorm(Storm storm) {
+        this.storm = storm;
+    }
+	
 }
