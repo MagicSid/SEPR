@@ -220,17 +220,8 @@ public class SailingScreen extends BaseScreen {
                 }
                 obstacleList.add(solid);
             	}
-//                else if (object instanceof CircleMapObject){
-//                CircleMapObject circleObject =(CircleMapObject) object;
-//                Circle c = circleObject .getCircle();
-//             
-//                BaseActor solid = new BaseActor();
-//                solid.setPosition(c.x, c.y);
-//                solid.setRadius(c.radius);
-//                solid.setName(object.getName());
-//                solid.setCircleBoundary();
-//                String objectName = object.getName();
-//            }
+
+
                 else {
                 System.err.println("Unknown PhysicsData object.");
             }
@@ -451,19 +442,21 @@ public class SailingScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         // render
+
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         tiledMapRenderer.render(backgroundLayers);
-        mainStage.draw();
         tiledMapRenderer.render(foregroundLayers);
+        mainStage.draw();        
         uiStage.draw();
 
         if (!gamePaused){
         	if(!getMusic().isPlaying()) {
         		getMusic().play();
         	}
-            uiStage.act(delta);
             mainStage.act(delta);
+            uiStage.act(delta);
+
             update(delta);
 
             if (!playerShip.isAnchor()){

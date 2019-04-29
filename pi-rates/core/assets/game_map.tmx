@@ -14,7 +14,7 @@
  </layer>
  <layer id="10" name="Scenery" width="120" height="120" locked="1">
   <data encoding="base64" compression="zlib">
-   eJztwTEBAAAAwqD1T20IX6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgNcA4QAAAQ==
+   eJzt0cEJhDAAAEH7b8Fm/d7nQESTuM7AVrDbBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwD/7TzTsJ+Jdzjz1+Z2uvvV5fXe89Xg9d371eD1P/fV4viffejzXiLcez+Nv18i3Ho81463H4/jb5m+bv23+tvnb5m+bv23+9vnb5m+bt33+9nnb522ft33e9nnb5+s3ePstfgIAMx1uDsdg
   </data>
  </layer>
  <layer id="11" name="Overlay" width="120" height="120" locked="1">
