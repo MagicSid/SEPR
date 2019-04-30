@@ -293,14 +293,15 @@ public class SailingScreen extends BaseScreen {
 	            String name = region.getName();	        
 	            // Remove try later
 	            try {
-		            if (region.getCollege().isBossAlive()) {
+		            if (region.getCollege().isBossAlive() && !region.getCollege().getName().equals("Derwent")) {
 		            	collegesalive += region.getCollege().getName() + " "; 
+		            	collegesalive.substring(0,collegesalive.length() -2);
 		            }
 	            } catch (Exception e){
 	            	System.out.println(region.getName());
 	            }
 		            
-	            collegesalive.substring(0,collegesalive.length() -2);
+	            
 	            
 	            if (playerShip.overlaps(region, false)) {
 	                x = true;

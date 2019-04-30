@@ -229,9 +229,13 @@ public abstract class BaseScreen implements Screen {
 		    	while(music.isPlaying()) {
 		    		music.stop();
 		    	}
-		        dispose();
-		        game.setScreen(screen);
 	    	}
+	    	//System.out.println("hi");
+	    	dispose();
+	        game.setScreen(screen);
+	    	
+	    }else {
+	    	screen.dispose();
 	    }
     }
 
